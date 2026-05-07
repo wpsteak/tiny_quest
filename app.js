@@ -119,40 +119,42 @@ const levels = [
     cumulativeFrom: 5,
     sourceTitle: "新增功能卡",
     zoneTitle: "現有模組",
-    prompt: "延續上一關，main 已經變薄了。現在只新增一個「估算點心熱量」的小功能，它仍然是在回答「熱量怎麼算」。這種小新增先放進既有的熱量計算模組就好，不需要急著拆新模組。",
-    success: "這是合理的暫放：單一小功能還不足以形成新的模組責任。先放在熱量計算，等同類功能真的變多，再考慮重構。",
+    prompt: "延續上一關，main 已經變薄了。現在只新增一個「提醒今天記得記錄晚餐」的小功能。它不是在新增記錄，而是在提醒使用者去記錄；但因為目前只有一個提醒，先放在飲食紀錄旁邊是合理的，不需要急著拆新模組。",
+    success: "這是合理的暫放：這張卡有「記錄」的意思，先放在飲食紀錄可以。但它真正做的事是提醒使用者，等提醒功能變多時，再考慮拆出提醒通知。",
     zones: [
       { id: "profile", name: "個人資料", hint: "profile" },
-      { id: "foodLog", name: "飲食紀錄", hint: "foodLog" },
-      { id: "calorie", name: "熱量計算", hint: "calorie，小功能可先放這裡" },
+      { id: "foodLog", name: "飲食紀錄", hint: "foodLog，小提醒可先放這裡" },
+      { id: "calorie", name: "熱量計算", hint: "calorie" },
       { id: "report", name: "成果報告", hint: "report" }
     ],
     newItems: [
-      { id: "snack", label: "估算點心熱量", detail: "estimateSnackCalories()", target: "calorie" }
+      { id: "dinnerReminder", label: "提醒今天記得記錄晚餐", detail: "remindDinnerLog()", target: "foodLog" }
     ]
   },
   {
     type: "互動關卡",
-    title: "熱量功能變多後再拆模組",
+    title: "提醒變多後再拆模組",
     mode: "sort",
-    sourceTitle: "熱量計算裡的功能",
-    zoneTitle: "拆出來的小模組",
-    prompt: "熱量計算一開始只有一兩個功能，放在一起還可以。但現在功能變多了：有些是在算「某一餐或某個食物有幾卡」，有些是在看「今天整體吃得如何」並給提醒。請把它們拆成兩個更清楚的小模組。",
-    success: "拆得更清楚了：餐點熱量負責單次食物或餐點，每日建議負責看一整天的狀況。重構不是把東西拆越細越好，而是在功能變多後，讓每個模組的責任更容易看懂。",
+    cumulativeFrom: 6,
+    sourceTitle: "又新增的提醒",
+    zoneTitle: "重新規劃模組",
+    prompt: "延續上一關，一個晚餐記錄提醒先放在飲食紀錄還可以；但現在提醒功能變多了，飲食紀錄開始同時負責「保存吃了什麼」和「叫使用者去做事」。請新增提醒通知，把提醒類功能集中過去。",
+    success: "現在更清楚了：飲食紀錄負責保存吃了什麼，提醒通知負責叫使用者去做事。一開始只有一個提醒，暫放在飲食紀錄可以；但提醒變多後，就值得拆成自己的模組。",
     zones: [
-      { id: "mealCalories", name: "餐點熱量", hint: "單一餐點或食物有幾卡" },
-      { id: "dailyAdvice", name: "每日建議", hint: "看一整天狀況並給提醒" }
+      { id: "profile", name: "個人資料", hint: "profile" },
+      { id: "foodLog", name: "飲食紀錄", hint: "保存吃了什麼" },
+      { id: "calorie", name: "熱量計算", hint: "calorie" },
+      { id: "report", name: "成果報告", hint: "report" },
+      { id: "notification", name: "提醒通知", hint: "叫使用者去做事" }
     ],
-    items: [
-      { id: "breakfastCalories", label: "計算早餐熱量", detail: "calculateBreakfastCalories()", target: "mealCalories" },
-      { id: "lunchCalories", label: "計算午餐熱量", detail: "calculateLunchCalories()", target: "mealCalories" },
-      { id: "dinnerCalories", label: "計算晚餐熱量", detail: "calculateDinnerCalories()", target: "mealCalories" },
-      { id: "snackCalories", label: "估算點心熱量", detail: "estimateSnackCalories()", target: "mealCalories" },
-      { id: "dailyTotal", label: "加總今天所有熱量", detail: "sumTodayCalories()", target: "dailyAdvice" },
-      { id: "overLimit", label: "檢查今天是否超標", detail: "checkDailyLimit()", target: "dailyAdvice" },
-      { id: "remainingToday", label: "提醒今天還能吃多少", detail: "showRemainingCalories()", target: "dailyAdvice" },
-      { id: "dailySuggestion", label: "給今天飲食建議", detail: "suggestDailyMeals()", target: "dailyAdvice" }
-    ]
+    newItems: [
+      { id: "breakfastReminder", label: "提醒今天記得記錄早餐", detail: "remindBreakfastLog()", target: "notification" },
+      { id: "waterReminder", label: "提醒今天記得喝水", detail: "remindDrinkWater()", target: "notification" },
+      { id: "reportReminder", label: "提醒週報已經出爐", detail: "remindWeeklyReport()", target: "notification" }
+    ],
+    overrides: {
+      dinnerReminder: "notification"
+    }
   }
 ];
 
