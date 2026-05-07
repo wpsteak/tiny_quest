@@ -161,6 +161,168 @@ const levels = [
     overrides: {
       dinnerReminder: "notification"
     }
+  },
+  {
+    type: "說明",
+    title: "SSOT：只認一個真相來源",
+    mode: "explain",
+    html: `
+      <p><strong>SSOT</strong> 是 Single Source of Truth，意思是「同一件事只認一個真相來源」。</p>
+      <p>如果補習時間同時寫在媽媽手機、爸爸紙本、小孩群組和冰箱便利貼，只要其中一份沒更新，全家就會吵起來。比較好的做法是：共用行事曆是唯一真相，其他地方只是顯示或提醒。</p>
+      <p>在 AI coding 裡，SSOT 很重要。AI 常會把同一份資料複製到很多地方，看起來方便，但之後改一處漏一處，就會出 bug。</p>
+    `
+  },
+  {
+    type: "互動關卡",
+    title: "家庭行事曆的真相來源",
+    mode: "sort",
+    sourceTitle: "家庭資訊",
+    zoneTitle: "資訊角色",
+    prompt: "同一個補習時間不要到處各存一份。請判斷哪些應該是真相來源，哪些只是顯示，哪些是容易造成衝突的重複副本。",
+    success: "SSOT 的重點不是不能顯示在很多地方，而是只能有一個地方負責決定真相。其他地方應該讀它、顯示它、提醒它。",
+    failureHint: "想想：如果補習時間改了，應該改哪裡才算真的改？其他地方是讀取，還是自己又抄了一份？",
+    zones: [
+      { id: "truth", name: "唯一真相", hint: "真的在這裡修改" },
+      { id: "view", name: "只是顯示", hint: "讀真相後顯示或提醒" },
+      { id: "copy", name: "重複副本", hint: "自己抄一份，容易不同步" }
+    ],
+    items: [
+      { id: "sharedCalendar", label: "家庭共用行事曆", detail: "補習時間在這裡改", target: "truth" },
+      { id: "phoneWidget", label: "手機桌面小工具", detail: "顯示共用行事曆", target: "view" },
+      { id: "chatReminder", label: "群組提醒訊息", detail: "從行事曆發提醒", target: "view" },
+      { id: "fridgeCopy", label: "冰箱便利貼手抄一份", detail: "改時間容易漏改", target: "copy" },
+      { id: "paperCopy", label: "爸爸紙本手帳再寫一份", detail: "可能跟行事曆不同步", target: "copy" }
+    ]
+  },
+  {
+    type: "互動關卡",
+    title: "健康資料的真相來源",
+    mode: "sort",
+    sourceTitle: "App 裡的資料",
+    zoneTitle: "資料角色",
+    prompt: "回到健康管理 App。請分辨哪些資料應該直接保存成真相，哪些可以從真相算出來，哪些只是畫面顯示。",
+    success: "這就是程式裡的 SSOT：體重、目標、餐點紀錄是來源；已吃熱量和剩餘熱量可以算出來；畫面只是顯示結果。",
+    failureHint: "如果某個數字可以從其他資料算出來，通常不該再另外存一份。否則兩邊不同步時，你會不知道該相信誰。",
+    zones: [
+      { id: "source", name: "真相來源", hint: "直接保存的資料" },
+      { id: "derived", name: "由真相算出", hint: "需要時再計算" },
+      { id: "display", name: "只是畫面顯示", hint: "讀資料後呈現" }
+    ],
+    items: [
+      { id: "weight", label: "目前體重", detail: "profile.weight", target: "source" },
+      { id: "dailyGoal", label: "每日目標熱量", detail: "profile.dailyGoal", target: "source" },
+      { id: "mealRecords", label: "今日餐點紀錄", detail: "foodLog.meals", target: "source" },
+      { id: "eatenCalories", label: "今天已吃熱量", detail: "由餐點紀錄加總", target: "derived" },
+      { id: "remainingCalories", label: "今天剩餘熱量", detail: "由目標減已吃", target: "derived" },
+      { id: "dashboardNumber", label: "首頁上的剩餘熱量數字", detail: "dashboard 顯示", target: "display" }
+    ]
+  },
+  {
+    type: "說明",
+    title: "DRY：不要重複自己",
+    mode: "explain",
+    html: `
+      <p><strong>DRY</strong> 是 Don't Repeat Yourself，意思是「不要把同一套規則到處複製」。</p>
+      <p>如果店鋪營業時間寫在門口、Google Map、IG、菜單、外送平台，每次改公休日都要改五次，漏一個就會出錯。</p>
+      <p>在程式裡也一樣。相同的檢查規則、計算公式、文字格式，如果複製很多份，之後 AI 幫你改其中一份，其他地方可能還是舊的。</p>
+    `
+  },
+  {
+    type: "互動關卡",
+    title: "營業時間不要到處手抄",
+    mode: "sort",
+    sourceTitle: "店鋪資訊",
+    zoneTitle: "整理方式",
+    prompt: "店鋪營業時間會出現在很多地方，但不應該每個地方都手抄一份。請分辨哪個是共用來源，哪些只是引用顯示，哪些是重複手抄。",
+    success: "DRY 不是不能出現在很多畫面，而是同一條規則不要維護很多份。共用來源改一次，其他地方跟著顯示。",
+    failureHint: "想想如果營業時間改了，哪種做法只要改一次？哪種做法需要到處找、到處改？",
+    zones: [
+      { id: "shared", name: "共用來源", hint: "規則只維護一次" },
+      { id: "use", name: "引用顯示", hint: "讀共用來源" },
+      { id: "duplicate", name: "重複手抄", hint: "容易漏改" }
+    ],
+    items: [
+      { id: "hoursSetting", label: "營業時間設定表", detail: "唯一維護位置", target: "shared" },
+      { id: "websiteHours", label: "官網顯示營業時間", detail: "讀設定表", target: "use" },
+      { id: "menuHours", label: "菜單頁顯示營業時間", detail: "讀設定表", target: "use" },
+      { id: "igBioCopy", label: "IG 自介手打一份時間", detail: "改時間容易漏", target: "duplicate" },
+      { id: "posterCopy", label: "海報檔案寫死時間", detail: "可能變成舊資料", target: "duplicate" }
+    ]
+  },
+  {
+    type: "互動關卡",
+    title: "重複檢查規則要抽出來",
+    mode: "sort",
+    sourceTitle: "Email 檢查功能",
+    zoneTitle: "DRY 整理",
+    prompt: "App 有註冊、登入、個人資料三個地方都需要檢查 Email。請把共同規則集中，讓各頁面使用同一個檢查工具。",
+    success: "這就是 DRY：Email 格式規則只寫一次。註冊、登入、個人資料頁都使用同一個工具，而不是各自複製一份。",
+    failureHint: "如果 Email 規則改了，你希望只改一個共用工具，還是改三個頁面裡各自複製的規則？",
+    zones: [
+      { id: "common", name: "共用檢查工具", hint: "規則只寫一次" },
+      { id: "useCommon", name: "使用共用工具", hint: "頁面呼叫它" },
+      { id: "copyRule", name: "不要複製", hint: "重複規則會失控" }
+    ],
+    items: [
+      { id: "emailRule", label: "檢查 Email 格式", detail: "validateEmail()", target: "common" },
+      { id: "signupUse", label: "註冊頁使用 Email 檢查", detail: "call validateEmail()", target: "useCommon" },
+      { id: "loginUse", label: "登入頁使用 Email 檢查", detail: "call validateEmail()", target: "useCommon" },
+      { id: "profileUse", label: "個人資料頁使用 Email 檢查", detail: "call validateEmail()", target: "useCommon" },
+      { id: "signupCopy", label: "註冊頁複製一份 Email 規則", detail: "copy pasted rule", target: "copyRule" },
+      { id: "profileCopy", label: "個人資料頁再複製一份 Email 規則", detail: "copy pasted rule", target: "copyRule" }
+    ]
+  },
+  {
+    type: "說明",
+    title: "最小改動：只改真正需要改的地方",
+    mode: "explain",
+    html: `
+      <p><strong>最小改動原則</strong> 是：需求只要改一小件事，就不要順手重寫一大片。</p>
+      <p>例如餐廳只是要把雞腿飯從 120 元改成 130 元，好的做法是改價目表那一格；壞的做法是重做整份菜單、換收銀流程、順手改海報版型。</p>
+      <p>AI coding 很常過度熱心。你要學會要求 AI：「只改必要位置，不要重構無關檔案，不要改既有行為。」</p>
+    `
+  },
+  {
+    type: "互動關卡",
+    title: "改價格，不要重裝潢",
+    mode: "sort",
+    sourceTitle: "可能的改動",
+    zoneTitle: "改動範圍",
+    prompt: "需求只有一個：雞腿飯從 120 元改成 130 元。請選出真正必要的改動，並把過度改動放到不要動。",
+    success: "最小改動不是偷懶，而是降低風險。需求只改價格，就不要順手改菜單結構、海報設計或收銀流程。",
+    failureHint: "先盯住需求：只改雞腿飯價格。任何和價格無關、可能造成新 bug 的改動，都應該先不要動。",
+    zones: [
+      { id: "needed", name: "必要改動", hint: "剛好滿足需求" },
+      { id: "avoid", name: "不要動", hint: "超出需求範圍" }
+    ],
+    items: [
+      { id: "price", label: "把雞腿飯價格改成 130", detail: "必要", target: "needed" },
+      { id: "menuLayout", label: "重新設計整份菜單版面", detail: "過度", target: "avoid" },
+      { id: "drinkCategory", label: "順手調整飲料分類", detail: "無關", target: "avoid" },
+      { id: "cashierFlow", label: "重做收銀流程", detail: "風險太大", target: "avoid" },
+      { id: "posterStyle", label: "改海報字體和配色", detail: "無關", target: "avoid" }
+    ]
+  },
+  {
+    type: "互動關卡",
+    title: "請 AI 改設定，也要控制範圍",
+    mode: "sort",
+    sourceTitle: "AI 想改的地方",
+    zoneTitle: "是否該改",
+    prompt: "需求是：把提醒時間從晚上 8 點改成晚上 9 點。請把必要改動和過度改動分開。",
+    success: "這就是和 AI 協作時的最小改動：只改提醒時間設定，驗證提醒仍會出現，不要順手重寫整個通知模組。",
+    failureHint: "需求只有提醒時間。凡是改資料模型、重寫 UI、搬模組，通常都不是這次必要改動。",
+    zones: [
+      { id: "needed", name: "必要改動", hint: "只改需求要求的地方" },
+      { id: "avoid", name: "不要動", hint: "會增加風險" }
+    ],
+    items: [
+      { id: "timeSetting", label: "把提醒時間設定改成 21:00", detail: "reminderTime", target: "needed" },
+      { id: "smallTest", label: "確認提醒文字仍正常出現", detail: "簡單驗證", target: "needed" },
+      { id: "rewriteNotification", label: "重寫整個提醒通知模組", detail: "過度", target: "avoid" },
+      { id: "changeFoodLog", label: "修改飲食紀錄資料格式", detail: "無關", target: "avoid" },
+      { id: "redesignDashboard", label: "重新設計首頁畫面", detail: "無關", target: "avoid" }
+    ]
   }
 ];
 

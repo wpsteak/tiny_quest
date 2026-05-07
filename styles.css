@@ -24,6 +24,7 @@
 
 body {
   margin: 0;
+  overflow: hidden;
   min-height: 100vh;
   color: var(--ink);
   background:
@@ -38,12 +39,22 @@ button {
 }
 
 .app-shell {
-  display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
-  min-height: 100vh;
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .lesson-nav {
+  position: fixed;
+  inset: 0 auto 0 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 300px;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
   padding: 24px;
   border-right: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.88);
@@ -88,6 +99,8 @@ button {
 .level-list {
   display: grid;
   gap: 10px;
+  align-content: start;
+  overflow: auto;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -126,11 +139,23 @@ button {
 }
 
 .stage {
-  display: grid;
-  grid-template-rows: auto auto 1fr auto auto;
+  position: fixed;
+  inset: 0 0 0 300px;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
   padding: 28px;
   min-width: 0;
+}
+
+.stage-header,
+.task-card,
+.result-panel,
+.stage-footer {
+  flex: 0 0 auto;
 }
 
 .stage-header,
@@ -221,6 +246,9 @@ button {
 }
 
 .explain-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
   padding: 26px;
 }
 
@@ -240,9 +268,11 @@ button {
 .game-panel {
   display: grid;
   grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  flex: 1 1 auto;
   gap: 18px;
   padding: 18px;
   min-height: 0;
+  overflow: hidden;
 }
 
 .items-column,
@@ -278,7 +308,9 @@ button {
 }
 
 .source-items {
-  min-height: 180px;
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
   padding: 14px;
   border: 1px dashed #a9b4c3;
   border-radius: 8px;
@@ -290,6 +322,7 @@ button {
   grid-template-columns: repeat(2, minmax(210px, 1fr));
   gap: 14px;
   align-content: start;
+  min-height: 0;
   overflow: auto;
   padding-right: 4px;
 }
@@ -460,17 +493,38 @@ button:disabled {
 }
 
 @media (max-width: 900px) {
+  body {
+    overflow: auto;
+  }
+
   .app-shell {
-    grid-template-columns: 1fr;
+    display: block;
+    width: auto;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
   }
 
   .lesson-nav {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    overflow: visible;
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
 
   .level-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .stage {
+    position: static;
+    inset: auto;
+    height: auto;
+    overflow: visible;
   }
 
   .game-panel {
