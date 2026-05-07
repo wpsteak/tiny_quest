@@ -83,62 +83,75 @@ const levels = [
     html: `
       <p>以健康管理或卡路里計算器為例，功能可以依照責任拆成幾個模組。這不是為了把檔案變多，而是讓每個地方只回答一類問題。</p>
       <ul>
-        <li><strong>profile</strong>：身高、體重、年齡、目標。</li>
-        <li><strong>foodLog</strong>：新增餐點、查詢每日飲食紀錄。</li>
-        <li><strong>calorie</strong>：計算基礎代謝、總熱量、剩餘額度。</li>
-        <li><strong>report</strong>：整理週報、趨勢、提醒。</li>
+        <li><strong>個人資料 profile</strong>：身高、體重、年齡、目標。</li>
+        <li><strong>飲食紀錄 foodLog</strong>：新增餐點、查詢每天吃了什麼。</li>
+        <li><strong>熱量計算 calorie</strong>：把餐點或目標換算成熱量。</li>
+        <li><strong>成果報告 report</strong>：整理週報、趨勢、提醒。</li>
       </ul>
-      <p>function 要放在哪裡，可以問：「它主要在改變或回答哪一種資料？」答案通常就是它該待的模組。</p>
+      <p>接下來先看中文功能卡。英文 function 名稱只放在小字當參考，不需要先背單字。</p>
     `
   },
   {
     type: "互動關卡",
-    title: "把 main 裡的 function 分到模組",
+    title: "把功能卡分到模組",
     mode: "sort",
-    sourceTitle: "main 裡的 function",
+    sourceTitle: "main 裡的功能卡",
     zoneTitle: "已建立模組",
-    prompt: "把 function 拖到最符合責任的模組。注意名稱中的動詞與資料對象。",
+    prompt: "先看功能卡的大字中文：它主要在處理哪一種資料？把它拖到最符合責任的模組。英文小字只是程式裡可能出現的 function 名稱。",
     success: "main 變薄了：它只需要協調流程，不必承擔所有細節。",
     zones: [
-      { id: "profile", name: "profile 模組", hint: "使用者資料與目標" },
-      { id: "foodLog", name: "foodLog 模組", hint: "飲食紀錄" },
-      { id: "calorie", name: "calorie 模組", hint: "熱量計算" },
-      { id: "report", name: "report 模組", hint: "摘要與趨勢" }
+      { id: "profile", name: "個人資料", hint: "profile" },
+      { id: "foodLog", name: "飲食紀錄", hint: "foodLog" },
+      { id: "calorie", name: "熱量計算", hint: "calorie" },
+      { id: "report", name: "成果報告", hint: "report" }
     ],
     items: [
-      { id: "setGoal", label: "setDailyGoal()", detail: "設定每日目標", target: "profile" },
-      { id: "updateWeight", label: "updateWeight()", detail: "更新體重", target: "profile" },
-      { id: "addMeal", label: "addMeal()", detail: "新增一餐", target: "foodLog" },
-      { id: "listMeals", label: "listMealsByDate()", detail: "查詢每日餐點", target: "foodLog" },
-      { id: "calcBmr", label: "calculateBMR()", detail: "計算基礎代謝", target: "calorie" },
-      { id: "remaining", label: "remainingCalories()", detail: "計算剩餘熱量", target: "calorie" },
-      { id: "weekly", label: "buildWeeklyReport()", detail: "產生週報", target: "report" },
-      { id: "trend", label: "summarizeTrend()", detail: "整理趨勢", target: "report" }
+      { id: "setGoal", label: "設定每日目標", detail: "setDailyGoal()", target: "profile" },
+      { id: "addMeal", label: "新增一餐記錄", detail: "addMeal()", target: "foodLog" },
+      { id: "calcCalories", label: "計算這餐熱量", detail: "calculateMealCalories()", target: "calorie" },
+      { id: "weekly", label: "產生每週報告", detail: "buildWeeklyReport()", target: "report" }
     ]
   },
   {
     type: "互動關卡",
-    title: "重構時維持 input / output 不變",
+    title: "小功能先留在既有模組",
     mode: "sort",
-    sourceTitle: "calorie 模組變擁擠",
-    zoneTitle: "新的模組邊界",
-    prompt: "function 變多時，把一群相近責任抽成新模組。重構前後，對外使用的 input / output 要維持穩定。",
-    success: "重構完成：內部變乾淨，外部呼叫方式仍然穩定。",
+    cumulativeFrom: 5,
+    sourceTitle: "新增功能卡",
+    zoneTitle: "現有模組",
+    prompt: "延續上一關，main 已經變薄了。現在只新增一個「估算點心熱量」的小功能，它仍然是在回答「熱量怎麼算」。這種小新增先放進既有的熱量計算模組就好，不需要急著拆新模組。",
+    success: "這是合理的暫放：單一小功能還不足以形成新的模組責任。先放在熱量計算，等同類功能真的變多，再考慮重構。",
     zones: [
-      { id: "calorieCore", name: "calorieCore", hint: "純熱量公式" },
-      { id: "nutritionRules", name: "nutritionRules", hint: "營養規則與建議" },
-      { id: "mealAnalysis", name: "mealAnalysis", hint: "餐點資料分析" },
-      { id: "publicApi", name: "public API", hint: "保留給外部呼叫" }
+      { id: "profile", name: "個人資料", hint: "profile" },
+      { id: "foodLog", name: "飲食紀錄", hint: "foodLog" },
+      { id: "calorie", name: "熱量計算", hint: "calorie，小功能可先放這裡" },
+      { id: "report", name: "成果報告", hint: "report" }
+    ],
+    newItems: [
+      { id: "snack", label: "估算點心熱量", detail: "estimateSnackCalories()", target: "calorie" }
+    ]
+  },
+  {
+    type: "互動關卡",
+    title: "熱量功能變多後再拆模組",
+    mode: "sort",
+    sourceTitle: "熱量計算裡的功能",
+    zoneTitle: "拆出來的小模組",
+    prompt: "熱量計算一開始只有一兩個功能，放在一起還可以。但現在功能變多了：有些是在算「某一餐或某個食物有幾卡」，有些是在看「今天整體吃得如何」並給提醒。請把它們拆成兩個更清楚的小模組。",
+    success: "拆得更清楚了：餐點熱量負責單次食物或餐點，每日建議負責看一整天的狀況。重構不是把東西拆越細越好，而是在功能變多後，讓每個模組的責任更容易看懂。",
+    zones: [
+      { id: "mealCalories", name: "餐點熱量", hint: "單一餐點或食物有幾卡" },
+      { id: "dailyAdvice", name: "每日建議", hint: "看一整天狀況並給提醒" }
     ],
     items: [
-      { id: "bmr", label: "calculateBMR(profile)", detail: "profile -> number", target: "calorieCore" },
-      { id: "tdee", label: "calculateTDEE(profile)", detail: "profile -> number", target: "calorieCore" },
-      { id: "macro", label: "suggestMacros(goal)", detail: "goal -> macroRatio", target: "nutritionRules" },
-      { id: "limit", label: "checkDailyLimit(total)", detail: "number -> status", target: "nutritionRules" },
-      { id: "mealSum", label: "sumMealCalories(meals)", detail: "meal[] -> number", target: "mealAnalysis" },
-      { id: "mealTags", label: "tagHighSugarMeals(meals)", detail: "meal[] -> tag[]", target: "mealAnalysis" },
-      { id: "remainingApi", label: "remainingCalories(profile, meals)", detail: "same input -> same output", target: "publicApi" },
-      { id: "summaryApi", label: "dailyNutritionSummary(date)", detail: "same input -> same output", target: "publicApi" }
+      { id: "breakfastCalories", label: "計算早餐熱量", detail: "calculateBreakfastCalories()", target: "mealCalories" },
+      { id: "lunchCalories", label: "計算午餐熱量", detail: "calculateLunchCalories()", target: "mealCalories" },
+      { id: "dinnerCalories", label: "計算晚餐熱量", detail: "calculateDinnerCalories()", target: "mealCalories" },
+      { id: "snackCalories", label: "估算點心熱量", detail: "estimateSnackCalories()", target: "mealCalories" },
+      { id: "dailyTotal", label: "加總今天所有熱量", detail: "sumTodayCalories()", target: "dailyAdvice" },
+      { id: "overLimit", label: "檢查今天是否超標", detail: "checkDailyLimit()", target: "dailyAdvice" },
+      { id: "remainingToday", label: "提醒今天還能吃多少", detail: "showRemainingCalories()", target: "dailyAdvice" },
+      { id: "dailySuggestion", label: "給今天飲食建議", detail: "suggestDailyMeals()", target: "dailyAdvice" }
     ]
   }
 ];
@@ -148,6 +161,8 @@ let unlockedLevel = 0;
 let selectedTileId = null;
 const gameStates = {};
 const completedLevels = new Set();
+const params = new URLSearchParams(window.location.search);
+const isDevMode = params.get("dev") === "1";
 
 const nodes = {
   levelList: document.querySelector("#levelList"),
@@ -203,6 +218,9 @@ function renderLevel() {
   nodes.feedback.textContent = completedLevels.has(currentLevel)
     ? "這一關已完成，結果已鎖定。需要修改時請先重置。"
     : level.prompt || "閱讀說明後進入下一關。";
+  if (isDevMode) {
+    nodes.feedback.textContent = `[測試模式] ${nodes.feedback.textContent}`;
+  }
   nodes.prevButton.disabled = currentLevel === 0;
   nodes.nextButton.disabled = currentLevel >= unlockedLevel && level.mode === "sort";
   nodes.nextButton.textContent = currentLevel === levels.length - 1 ? "完成" : "下一關";
@@ -221,6 +239,16 @@ function renderLevel() {
   }
 
   renderNav();
+}
+
+function applyDevMode() {
+  if (!isDevMode) return;
+
+  unlockedLevel = levels.length - 1;
+  const requestedLevel = Number(params.get("level"));
+  if (Number.isInteger(requestedLevel) && requestedLevel >= 1 && requestedLevel <= levels.length) {
+    currentLevel = requestedLevel - 1;
+  }
 }
 
 function renderGame(level) {
@@ -477,4 +505,5 @@ nodes.nextButton.addEventListener("click", () => {
   }
 });
 
+applyDevMode();
 renderLevel();
