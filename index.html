@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>模組化小屋</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="lesson-nav" aria-label="關卡導覽">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <div>
+            <h1>模組化小屋</h1>
+            <p>從空間整理學程式設計</p>
+          </div>
+        </div>
+        <ol id="levelList" class="level-list"></ol>
+      </aside>
+
+      <section class="stage" aria-live="polite">
+        <header class="stage-header">
+          <div>
+            <p id="levelType" class="eyebrow"></p>
+            <h2 id="levelTitle"></h2>
+          </div>
+          <div class="progress-wrap" aria-label="關卡進度">
+            <span id="progressText"></span>
+            <div class="progress-track">
+              <div id="progressBar" class="progress-bar"></div>
+            </div>
+          </div>
+        </header>
+
+        <article id="explainPanel" class="explain-panel" hidden>
+          <div id="explainBody" class="explain-body"></div>
+        </article>
+
+        <article id="gamePanel" class="game-panel" hidden>
+          <div class="items-column">
+            <div class="panel-heading">
+              <h3 id="sourceTitle">待整理</h3>
+              <span id="remainingCount" class="counter"></span>
+            </div>
+            <div id="sourceItems" class="source-items" aria-label="可拖曳項目"></div>
+          </div>
+
+          <div class="zones-column">
+            <div class="panel-heading">
+              <h3 id="zoneTitle">目標空間</h3>
+              <button id="checkButton" class="primary-button" type="button">驗證</button>
+            </div>
+            <div id="dropZones" class="drop-zones"></div>
+          </div>
+        </article>
+
+        <footer class="stage-footer">
+          <p id="feedback" class="feedback"></p>
+          <div class="footer-actions">
+            <button id="resetButton" class="secondary-button" type="button">重置</button>
+            <button id="prevButton" class="secondary-button" type="button">上一關</button>
+            <button id="nextButton" class="primary-button" type="button">下一關</button>
+          </div>
+        </footer>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
