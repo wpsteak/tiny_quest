@@ -306,6 +306,11 @@ button {
   cursor: grabbing;
 }
 
+.tile:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
 .tile.selected {
   outline: 3px solid rgba(25, 103, 210, 0.26);
   border-color: var(--accent);

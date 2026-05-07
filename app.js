@@ -39,19 +39,18 @@ const levels = [
     type: "互動關卡",
     title: "東西變多時，新增更清楚的空間",
     mode: "sort",
+    cumulativeFrom: 1,
     sourceTitle: "新增物品",
     zoneTitle: "重新規劃空間",
-    prompt: "一開始啞鈴可以暫放客廳；但健身器材變多後，應該把同類責任集中到健身房。",
+    prompt: "延續上一關的家，新的健身器材冒出來了。把新增物品放進更清楚的空間，必要時也可以調整原本的家具。",
     success: "你把成長中的需求獨立成新空間，這就是重構的直覺。",
     zones: [
       { id: "living", name: "客廳", hint: "休息與招待" },
       { id: "bedroom", name: "臥室", hint: "睡眠" },
+      { id: "kitchen", name: "廚房", hint: "料理與餐具" },
       { id: "gym", name: "健身房", hint: "運動與訓練" }
     ],
-    items: [
-      { id: "sofa2", label: "沙發", icon: "🛋️", target: "living" },
-      { id: "lamp", label: "立燈", icon: "💡", target: "living" },
-      { id: "bed2", label: "床", icon: "🛏️", target: "bedroom" },
+    newItems: [
       { id: "dumbbell", label: "啞鈴", icon: "🏋️", target: "gym" },
       { id: "mat", label: "瑜伽墊", icon: "▭", target: "gym" },
       { id: "bike", label: "飛輪車", icon: "🚲", target: "gym" }
@@ -125,7 +124,10 @@ const levels = [
 ];
 
 let currentLevel = 0;
+let unlockedLevel = 0;
 let selectedTileId = null;
+const gameStates = {};
+const completedLevels = new Set();
 
 const nodes = {
   levelList: document.querySelector("#levelList"),
@@ -153,11 +155,15 @@ function renderNav() {
   levels.forEach((level, index) => {
     const item = document.createElement("li");
     const button = document.createElement("button");
+    const isUnlocked = index <= unlockedLevel;
     button.className = "level-button";
     button.type = "button";
+    button.disabled = !isUnlocked;
     button.setAttribute("aria-current", String(index === currentLevel));
-    button.innerHTML = `<strong>${index + 1}. ${level.title}</strong><span>${level.type}</span>`;
+    button.innerHTML = `<strong>${index + 1}. ${level.title}</strong><span>${isUnlocked ? level.type : "尚未解鎖"}</span>`;
     button.addEventListener("click", () => {
+      if (!isUnlocked) return;
+      saveCurrentGameState();
       currentLevel = index;
       renderLevel();
     });
@@ -174,9 +180,13 @@ function renderLevel() {
   nodes.progressText.textContent = `${currentLevel + 1} / ${levels.length}`;
   nodes.progressBar.style.width = `${((currentLevel + 1) / levels.length) * 100}%`;
   nodes.feedback.className = "feedback";
-  nodes.feedback.textContent = level.prompt || "閱讀說明後進入下一關。";
+  nodes.feedback.textContent = completedLevels.has(currentLevel)
+    ? "這一關已完成，結果已鎖定。需要修改時請先重置。"
+    : level.prompt || "閱讀說明後進入下一關。";
   nodes.prevButton.disabled = currentLevel === 0;
+  nodes.nextButton.disabled = currentLevel >= unlockedLevel && level.mode === "sort";
   nodes.nextButton.textContent = currentLevel === levels.length - 1 ? "完成" : "下一關";
+  nodes.checkButton.disabled = completedLevels.has(currentLevel);
 
   if (level.mode === "explain") {
     nodes.explainPanel.hidden = false;
@@ -219,8 +229,66 @@ function renderGame(level) {
     nodes.dropZones.append(zoneEl);
   });
 
-  level.items.forEach((item) => nodes.sourceItems.append(createTile(item)));
+  const items = getLevelItems(level);
+  const placements = getInitialPlacements(level, items);
+  const isCompleted = completedLevels.has(currentLevel);
+  items.forEach((item) => {
+    const tile = createTile(item);
+    tile.draggable = !isCompleted;
+    tile.disabled = isCompleted;
+    if (isCompleted) tile.classList.add("correct");
+    const location = placements[item.id];
+    const zone = location && location !== "source"
+      ? nodes.dropZones.querySelector(`[data-zone="${location}"] .drop-zone-items`)
+      : null;
+    if (zone) {
+      zone.append(tile);
+    } else {
+      nodes.sourceItems.append(tile);
+    }
+  });
+  saveCurrentGameState();
   updateRemaining();
+}
+
+function getLevelItems(level) {
+  if (level.cumulativeFrom !== undefined) {
+    return [
+      ...levels[level.cumulativeFrom].items,
+      ...(level.newItems || [])
+    ];
+  }
+  return level.items || [];
+}
+
+function getInitialPlacements(level, items) {
+  if (gameStates[currentLevel]) return { ...gameStates[currentLevel] };
+
+  if (level.cumulativeFrom !== undefined) {
+    const previousState = gameStates[level.cumulativeFrom] || {};
+    return items.reduce((placements, item) => {
+      const isNewItem = (level.newItems || []).some((newItem) => newItem.id === item.id);
+      placements[item.id] = isNewItem ? "source" : previousState[item.id] || item.target;
+      return placements;
+    }, {});
+  }
+
+  return items.reduce((placements, item) => {
+    placements[item.id] = "source";
+    return placements;
+  }, {});
+}
+
+function saveCurrentGameState() {
+  const level = levels[currentLevel];
+  if (!level || level.mode !== "sort" || nodes.gamePanel.hidden) return;
+
+  const placements = {};
+  document.querySelectorAll(".tile").forEach((tile) => {
+    const zone = tile.closest(".drop-zone");
+    placements[tile.dataset.item] = zone ? zone.dataset.zone : "source";
+  });
+  gameStates[currentLevel] = placements;
 }
 
 function createTile(item) {
@@ -242,6 +310,7 @@ function createTile(item) {
 }
 
 function selectTile(tile) {
+  if (completedLevels.has(currentLevel)) return;
   document.querySelectorAll(".tile.selected").forEach((el) => el.classList.remove("selected"));
   if (selectedTileId === tile.dataset.item) {
     selectedTileId = null;
@@ -252,12 +321,14 @@ function selectTile(tile) {
 }
 
 function handleDragOver(event) {
+  if (completedLevels.has(currentLevel)) return;
   event.preventDefault();
   const zone = event.currentTarget.closest(".drop-zone");
   if (zone) zone.classList.add("drag-over");
 }
 
 function handleDrop(event) {
+  if (completedLevels.has(currentLevel)) return;
   event.preventDefault();
   const zone = event.currentTarget.closest(".drop-zone");
   zone.classList.remove("drag-over");
@@ -267,26 +338,31 @@ function handleDrop(event) {
 }
 
 function handleDropToSource(event) {
+  if (completedLevels.has(currentLevel)) return;
   event.preventDefault();
   const itemId = event.dataTransfer.getData("text/plain");
   const tile = document.querySelector(`[data-item="${itemId}"]`);
   if (tile) {
     clearTileState(tile);
     nodes.sourceItems.append(tile);
+    saveCurrentGameState();
     updateRemaining();
   }
 }
 
 function moveSelectedTo(zone) {
+  if (completedLevels.has(currentLevel)) return;
   if (!selectedTileId) return;
   const tile = document.querySelector(`[data-item="${selectedTileId}"]`);
   if (tile) moveTileToZone(tile, zone);
 }
 
 function moveTileToZone(tile, zone) {
+  if (completedLevels.has(currentLevel)) return;
   clearTileState(tile);
   zone.querySelector(".drop-zone-items").append(tile);
   selectedTileId = null;
+  saveCurrentGameState();
   updateRemaining();
 }
 
@@ -303,6 +379,7 @@ function checkAnswers() {
   const level = levels[currentLevel];
   if (level.mode !== "sort") return;
 
+  const items = getLevelItems(level);
   let wrongCount = 0;
   let placedCount = 0;
   document.querySelectorAll(".tile").forEach((tile) => {
@@ -318,9 +395,20 @@ function checkAnswers() {
     if (!isCorrect) wrongCount += 1;
   });
 
-  if (wrongCount === 0 && placedCount === level.items.length) {
+  saveCurrentGameState();
+
+  if (wrongCount === 0 && placedCount === items.length) {
+    completedLevels.add(currentLevel);
+    unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
     nodes.feedback.className = "feedback ok";
     nodes.feedback.textContent = level.success;
+    nodes.nextButton.disabled = false;
+    nodes.checkButton.disabled = true;
+    document.querySelectorAll(".tile").forEach((tile) => {
+      tile.draggable = false;
+      tile.disabled = true;
+    });
+    renderNav();
   } else {
     nodes.feedback.className = "feedback bad";
     nodes.feedback.textContent = `還有 ${wrongCount} 個需要調整。綠色是正確位置，紅色是要重新思考的項目。`;
@@ -328,6 +416,11 @@ function checkAnswers() {
 }
 
 function resetLevel() {
+  for (let index = currentLevel; index < levels.length; index += 1) {
+    delete gameStates[index];
+    completedLevels.delete(index);
+  }
+  unlockedLevel = Math.min(unlockedLevel, currentLevel);
   renderLevel();
 }
 
@@ -335,12 +428,20 @@ nodes.checkButton.addEventListener("click", checkAnswers);
 nodes.resetButton.addEventListener("click", resetLevel);
 nodes.prevButton.addEventListener("click", () => {
   if (currentLevel > 0) {
+    saveCurrentGameState();
     currentLevel -= 1;
     renderLevel();
   }
 });
 nodes.nextButton.addEventListener("click", () => {
+  const level = levels[currentLevel];
+  if (level.mode === "explain") {
+    unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
+  }
+
   if (currentLevel < levels.length - 1) {
+    if (currentLevel + 1 > unlockedLevel) return;
+    saveCurrentGameState();
     currentLevel += 1;
     renderLevel();
   } else {
