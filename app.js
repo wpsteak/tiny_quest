@@ -37,24 +37,44 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "東西變多時，新增更清楚的空間",
+    title: "小需求先放在現有空間",
     mode: "sort",
     cumulativeFrom: 1,
     sourceTitle: "新增物品",
-    zoneTitle: "重新規劃空間",
-    prompt: "延續上一關的家，新的健身器材冒出來了。把新增物品放進更清楚的空間，必要時也可以調整原本的家具。",
-    success: "你把成長中的需求獨立成新空間，這就是重構的直覺。",
+    zoneTitle: "現有空間",
+    prompt: "延續上一關的家，現在只多了一個啞鈴。家人只是想在客廳邊看電視邊練一下，這時候還不需要立刻新增健身房。請把這個小需求放到最自然的既有空間。",
+    success: "這是合理的暫放：只有一個小需求時，先放在現有空間可以降低複雜度。模組化不是看到新東西就馬上拆新模組，而是先觀察責任是否真的變大。",
     zones: [
-      { id: "living", name: "客廳", hint: "休息與招待" },
-      { id: "bedroom", name: "臥室", hint: "睡眠" },
+      { id: "living", name: "客廳", hint: "休息、看電視，也可容納小需求" },
+      { id: "bedroom", name: "臥室", hint: "睡眠與個人物品" },
+      { id: "kitchen", name: "廚房", hint: "料理與餐具" }
+    ],
+    newItems: [
+      { id: "dumbbell", label: "啞鈴", icon: "🏋️", target: "living" }
+    ]
+  },
+  {
+    type: "互動關卡",
+    title: "東西變多時，新增更清楚的空間",
+    mode: "sort",
+    cumulativeFrom: 2,
+    sourceTitle: "又新增的物品",
+    zoneTitle: "重新規劃空間",
+    prompt: "延續上一關，啞鈴先放客廳是可以的。但現在健身器材越來越多，客廳開始同時承擔休息和訓練兩種責任。請把健身相關物品集中到新的健身房。",
+    success: "你把變大的同類責任抽成新空間了。這就是重構：當既有空間開始混亂，才把一群相關責任搬到新的模組。",
+    zones: [
+      { id: "living", name: "客廳", hint: "回到休息與招待" },
+      { id: "bedroom", name: "臥室", hint: "睡眠與個人物品" },
       { id: "kitchen", name: "廚房", hint: "料理與餐具" },
       { id: "gym", name: "健身房", hint: "運動與訓練" }
     ],
     newItems: [
-      { id: "dumbbell", label: "啞鈴", icon: "🏋️", target: "gym" },
       { id: "mat", label: "瑜伽墊", icon: "▭", target: "gym" },
       { id: "bike", label: "飛輪車", icon: "🚲", target: "gym" }
-    ]
+    ],
+    overrides: {
+      dumbbell: "gym"
+    }
   },
   {
     type: "說明",
@@ -254,7 +274,7 @@ function renderGame(level) {
 function getLevelItems(level) {
   if (level.cumulativeFrom !== undefined) {
     return [
-      ...levels[level.cumulativeFrom].items,
+      ...getLevelItems(levels[level.cumulativeFrom]),
       ...(level.newItems || [])
     ];
   }
@@ -268,7 +288,9 @@ function getInitialPlacements(level, items) {
     const previousState = gameStates[level.cumulativeFrom] || {};
     return items.reduce((placements, item) => {
       const isNewItem = (level.newItems || []).some((newItem) => newItem.id === item.id);
-      placements[item.id] = isNewItem ? "source" : previousState[item.id] || item.target;
+      placements[item.id] = isNewItem
+        ? "source"
+        : previousState[item.id] || getTargetForLevel(level, item);
       return placements;
     }, {});
   }
@@ -277,6 +299,10 @@ function getInitialPlacements(level, items) {
     placements[item.id] = "source";
     return placements;
   }, {});
+}
+
+function getTargetForLevel(level, item) {
+  return (level.overrides && level.overrides[item.id]) || item.target;
 }
 
 function saveCurrentGameState() {
@@ -390,7 +416,8 @@ function checkAnswers() {
       return;
     }
     placedCount += 1;
-    const isCorrect = tile.dataset.target === zone.dataset.zone;
+    const item = items.find((candidate) => candidate.id === tile.dataset.item);
+    const isCorrect = item && getTargetForLevel(level, item) === zone.dataset.zone;
     tile.classList.add(isCorrect ? "correct" : "wrong");
     if (!isCorrect) wrongCount += 1;
   });
