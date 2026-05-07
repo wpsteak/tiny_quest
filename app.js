@@ -1,6 +1,22 @@
 const levels = [
   {
     type: "說明",
+    title: "AI 很會加功能，但不一定會維持整潔",
+    mode: "explain",
+    html: `
+      <p>用 AI coding 做小工具時，第一版通常很快。真正的問題常出現在第三次、第五次加功能：功能塞錯地方、資料複製多份、相同規則到處重寫、小需求改太多，或簡單工具被做成複雜架構。</p>
+      <p>這堂課不是先教語法，而是教你看懂「專案為什麼開始變亂」，以及怎麼指揮 AI 把它整理回來。</p>
+      <ul>
+        <li><strong>SRP / 重構</strong>：功能變多時，責任要重新整理。</li>
+        <li><strong>SSOT</strong>：同一份資料只認一個真相來源。</li>
+        <li><strong>DRY</strong>：同一條規則不要複製很多份。</li>
+        <li><strong>KISS</strong>：先保持簡單，不要過度設計。</li>
+        <li><strong>最小改動</strong>：修改時控制影響範圍。</li>
+      </ul>
+    `
+  },
+  {
+    type: "說明",
     title: "寫程式像打造家裡隔間",
     mode: "explain",
     html: `
@@ -40,7 +56,7 @@ const levels = [
     type: "互動關卡",
     title: "小需求先放在現有空間",
     mode: "sort",
-    cumulativeFrom: 1,
+    cumulativeFrom: 2,
     sourceTitle: "新增物品",
     zoneTitle: "現有空間",
     prompt: "延續上一關的家，現在只多了一個啞鈴。家人只是想在客廳邊看電視邊練一下，這時候還不需要立刻新增健身房。請把這個小需求放到最自然的既有空間。",
@@ -59,7 +75,7 @@ const levels = [
     type: "互動關卡",
     title: "東西變多時，新增更清楚的空間",
     mode: "sort",
-    cumulativeFrom: 2,
+    cumulativeFrom: 3,
     sourceTitle: "又新增的物品",
     zoneTitle: "重新規劃空間",
     prompt: "延續上一關，啞鈴先放客廳是可以的。但現在健身器材越來越多，客廳開始同時承擔休息和訓練兩種責任。請把健身相關物品集中到新的健身房。",
@@ -120,7 +136,7 @@ const levels = [
     type: "互動關卡",
     title: "小功能先留在既有模組",
     mode: "sort",
-    cumulativeFrom: 5,
+    cumulativeFrom: 6,
     sourceTitle: "新增功能卡",
     zoneTitle: "現有模組",
     prompt: "延續上一關，main 已經變薄了。現在只新增一個「提醒今天記得記錄晚餐」的小功能。它不是在新增記錄，而是在提醒使用者去記錄；但因為目前只有一個提醒，先放在飲食紀錄旁邊是合理的，不需要急著拆新模組。",
@@ -140,7 +156,7 @@ const levels = [
     type: "互動關卡",
     title: "提醒變多後再拆模組",
     mode: "sort",
-    cumulativeFrom: 6,
+    cumulativeFrom: 7,
     sourceTitle: "又新增的提醒",
     zoneTitle: "重新規劃模組",
     prompt: "延續上一關，一個晚餐記錄提醒先放在飲食紀錄還可以；但現在提醒功能變多了，飲食紀錄開始同時負責「保存吃了什麼」和「叫使用者去做事」。請新增提醒通知，把提醒類功能集中過去。",
@@ -164,12 +180,25 @@ const levels = [
   },
   {
     type: "說明",
+    title: "你剛剛學到：SRP 與重構",
+    mode: "explain",
+    html: `
+      <p>剛剛你做了兩件工程師常做的事。</p>
+      <ul>
+        <li><strong>SRP</strong>：Single Responsibility Principle，單一職責原則。每個空間或模組，最好只負責一類事情。</li>
+        <li><strong>重構</strong>：不是推倒重來，而是在原本能用的狀態下重新整理，讓之後更好修改。</li>
+      </ul>
+      <p>AI 常會先把新功能塞到最近、最快能完成的位置。第一次可能沒問題，但功能變多後，你要能看出它已經變成自己的責任，並請 AI 幫你整理。</p>
+    `
+  },
+  {
+    type: "說明",
     title: "SSOT：只認一個真相來源",
     mode: "explain",
     html: `
       <p><strong>SSOT</strong> 是 Single Source of Truth，意思是「同一件事只認一個真相來源」。</p>
       <p>如果補習時間同時寫在媽媽手機、爸爸紙本、小孩群組和冰箱便利貼，只要其中一份沒更新，全家就會吵起來。比較好的做法是：共用行事曆是唯一真相，其他地方只是顯示或提醒。</p>
-      <p>在 AI coding 裡，SSOT 很重要。AI 常會把同一份資料複製到很多地方，看起來方便，但之後改一處漏一處，就會出 bug。</p>
+      <p>AI 為了讓某個畫面立刻能顯示資料，常會在那個畫面自己補一份資料。一開始看起來成功，但之後同一件事會出現很多版本。SSOT 是在問：這件事到底誰說了算？</p>
     `
   },
   {
@@ -223,30 +252,30 @@ const levels = [
     mode: "explain",
     html: `
       <p><strong>DRY</strong> 是 Don't Repeat Yourself，意思是「不要把同一套規則到處複製」。</p>
-      <p>如果店鋪營業時間寫在門口、Google Map、IG、菜單、外送平台，每次改公休日都要改五次，漏一個就會出錯。</p>
-      <p>在程式裡也一樣。相同的檢查規則、計算公式、文字格式，如果複製很多份，之後 AI 幫你改其中一份，其他地方可能還是舊的。</p>
+      <p>AI 很常用複製貼上解決局部問題，因為那樣最快。但如果同一條規則在三個地方各寫一份，以後改規則就會漏。</p>
+      <p>DRY 不是追求完全沒有重複文字，而是提醒你：同一條會一起變的規則，不要維護很多份。</p>
     `
   },
   {
     type: "互動關卡",
-    title: "營業時間不要到處手抄",
+    title: "折扣規則不要各自背一套",
     mode: "sort",
-    sourceTitle: "店鋪資訊",
+    sourceTitle: "折扣規則",
     zoneTitle: "整理方式",
-    prompt: "店鋪營業時間會出現在很多地方，但不應該每個地方都手抄一份。請分辨哪個是共用來源，哪些只是引用顯示，哪些是重複手抄。",
-    success: "DRY 不是不能出現在很多畫面，而是同一條規則不要維護很多份。共用來源改一次，其他地方跟著顯示。",
-    failureHint: "想想如果營業時間改了，哪種做法只要改一次？哪種做法需要到處找、到處改？",
+    prompt: "店裡有會員折扣、生日折扣和滿額免運。不要讓每位店員各自背一套規則，否則規則改了很容易有人還用舊版。請把共同規則和使用規則的人分開。",
+    success: "DRY 的重點是：折扣規則只維護一次。店員可以使用這套規則，但不要每個人各自抄一份。",
+    failureHint: "想想如果生日折扣改了，哪種做法只要改一張規則表？哪種做法要提醒每位店員改自己的版本？",
     zones: [
-      { id: "shared", name: "共用來源", hint: "規則只維護一次" },
-      { id: "use", name: "引用顯示", hint: "讀共用來源" },
-      { id: "duplicate", name: "重複手抄", hint: "容易漏改" }
+      { id: "shared", name: "共用規則表", hint: "規則只維護一次" },
+      { id: "use", name: "使用規則", hint: "照共用規則表執行" },
+      { id: "duplicate", name: "各自抄一份", hint: "容易漏改" }
     ],
     items: [
-      { id: "hoursSetting", label: "營業時間設定表", detail: "唯一維護位置", target: "shared" },
-      { id: "websiteHours", label: "官網顯示營業時間", detail: "讀設定表", target: "use" },
-      { id: "menuHours", label: "菜單頁顯示營業時間", detail: "讀設定表", target: "use" },
-      { id: "igBioCopy", label: "IG 自介手打一份時間", detail: "改時間容易漏", target: "duplicate" },
-      { id: "posterCopy", label: "海報檔案寫死時間", detail: "可能變成舊資料", target: "duplicate" }
+      { id: "discountRules", label: "折扣規則表", detail: "會員、生日、滿額規則", target: "shared" },
+      { id: "cashierUse", label: "櫃台結帳使用規則表", detail: "照表判斷折扣", target: "use" },
+      { id: "onlineUse", label: "線上訂單使用規則表", detail: "照表判斷折扣", target: "use" },
+      { id: "amyCopy", label: "Amy 店員自己抄一份規則", detail: "可能忘記更新", target: "duplicate" },
+      { id: "benCopy", label: "Ben 店員也抄一份規則", detail: "可能跟 Amy 不同", target: "duplicate" }
     ]
   },
   {
@@ -270,6 +299,61 @@ const levels = [
       { id: "profileUse", label: "個人資料頁使用 Email 檢查", detail: "call validateEmail()", target: "useCommon" },
       { id: "signupCopy", label: "註冊頁複製一份 Email 規則", detail: "copy pasted rule", target: "copyRule" },
       { id: "profileCopy", label: "個人資料頁再複製一份 Email 規則", detail: "copy pasted rule", target: "copyRule" }
+    ]
+  },
+  {
+    type: "說明",
+    title: "KISS：先保持簡單",
+    mode: "explain",
+    html: `
+      <p><strong>KISS</strong> 是 Keep It Simple，意思是「先讓設計簡單」。</p>
+      <p>AI 看過很多大型專案，所以有時會把小工具做得像大系統。你只是要簡單登入，它可能生出 service、manager、factory、strategy、repository 一大堆。</p>
+      <p>好設計不是看起來很厲害，而是下一個人能快速理解、能安全修改。先做剛好能使用、能理解的版本，需求真的變複雜時再重構。</p>
+    `
+  },
+  {
+    type: "互動關卡",
+    title: "班級點名先簡單",
+    mode: "sort",
+    sourceTitle: "點名工具功能",
+    zoneTitle: "現在要不要做",
+    prompt: "需求只是：每天記錄誰到了。請把現在真的需要的功能，和可以等需求變明確後再做的功能分開。",
+    success: "這就是 KISS：先做學生名單、日期、到或未到。QR code、家長通知、統計報表都可能有用，但不是第一版一定要有。",
+    failureHint: "先盯住第一版需求：每天記錄誰到了。會讓第一版變很大、但還不是必要的功能，先不要加。",
+    zones: [
+      { id: "now", name: "現在需要", hint: "第一版就要能用" },
+      { id: "later", name: "先不要", hint: "需求明確後再加" }
+    ],
+    items: [
+      { id: "studentList", label: "學生名單", detail: "誰在班上", target: "now" },
+      { id: "attendanceDate", label: "點名日期", detail: "哪一天", target: "now" },
+      { id: "presentAbsent", label: "到 / 未到", detail: "基本狀態", target: "now" },
+      { id: "qrCode", label: "QR code 自動簽到", detail: "可以以後再說", target: "later" },
+      { id: "parentNotify", label: "自動通知家長", detail: "還不是第一版必要", target: "later" },
+      { id: "analytics", label: "出席統計儀表板", detail: "先不要過度設計", target: "later" }
+    ]
+  },
+  {
+    type: "互動關卡",
+    title: "簡單登入不要做成大架構",
+    mode: "sort",
+    sourceTitle: "AI 提出的登入設計",
+    zoneTitle: "KISS 判斷",
+    prompt: "需求只是：做一個簡單登入畫面。請把第一版需要的東西和過度設計分開。",
+    success: "簡單登入第一版需要欄位、按鈕和錯誤訊息。複雜權限、策略管理器和 plugin 系統可能是大型產品才需要的東西。",
+    failureHint: "想想學生或下一位維護者能不能快速看懂。看起來很專業但目前用不到的架構，會讓小工具變難改。",
+    zones: [
+      { id: "simple", name: "第一版需要", hint: "剛好完成需求" },
+      { id: "tooMuch", name: "過度設計", hint: "現在先不要" }
+    ],
+    items: [
+      { id: "emailInput", label: "Email 欄位", detail: "使用者輸入帳號", target: "simple" },
+      { id: "passwordInput", label: "密碼欄位", detail: "使用者輸入密碼", target: "simple" },
+      { id: "loginButton", label: "登入按鈕", detail: "送出登入", target: "simple" },
+      { id: "errorText", label: "錯誤訊息", detail: "登入失敗時顯示", target: "simple" },
+      { id: "authFactory", label: "AuthServiceFactory", detail: "現在太複雜", target: "tooMuch" },
+      { id: "strategyManager", label: "LoginStrategyManager", detail: "目前用不到", target: "tooMuch" },
+      { id: "pluginSystem", label: "登入 plugin 系統", detail: "過度架構", target: "tooMuch" }
     ]
   },
   {
