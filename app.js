@@ -197,53 +197,48 @@ const levels = [
     mode: "explain",
     html: `
       <p><strong>SSOT</strong> 是 Single Source of Truth，意思是「同一件事只認一個真相來源」。</p>
-      <p>如果補習時間同時寫在媽媽手機、爸爸紙本、小孩群組和冰箱便利貼，只要其中一份沒更新，全家就會吵起來。比較好的做法是：共用行事曆是唯一真相，其他地方只是顯示或提醒。</p>
-      <p>AI 為了讓某個畫面立刻能顯示資料，常會在那個畫面自己補一份資料。一開始看起來成功，但之後同一件事會出現很多版本。SSOT 是在問：這件事到底誰說了算？</p>
+      <p>AI coding 常常是「局部解題」。你叫它改首頁，它就看首頁；你叫它改統計，它就看統計。當不同地方都需要同一份資料時，AI 可能會各放一份，讓每個地方先跑起來。</p>
+      <p>但長期來看，你會不知道哪一份才是真的。SSOT 就是在問：同一件事到底誰說了算？其他地方應該保存它，還是讀取它？</p>
     `
   },
   {
     type: "互動關卡",
-    title: "家庭行事曆的真相來源",
+    title: "餐廳資料要更新還是讀取",
     mode: "sort",
-    sourceTitle: "家庭資訊",
-    zoneTitle: "資訊角色",
-    prompt: "同一個補習時間不要到處各存一份。請判斷哪些應該是真相來源，哪些只是顯示，哪些是容易造成衝突的重複副本。",
-    success: "SSOT 的重點不是不能顯示在很多地方，而是只能有一個地方負責決定真相。其他地方應該讀它、顯示它、提醒它。",
-    failureHint: "想想：如果補習時間改了，應該改哪裡才算真的改？其他地方是讀取，還是自己又抄了一份？",
+    sourceTitle: "餐廳動作",
+    zoneTitle: "對訂位資料做什麼",
+    prompt: "客人原本訂位 6 人，後來改成 8 人，現場最後來 7 人。餐廳決定：訂位資料是唯一真相來源。收到新資訊的人要更新訂位資料；需要使用資料的人要讀取訂位資料。",
+    success: "這就是 SSOT：新資訊先更新到訂位資料；其他工作統一讀訂位資料。不要讓老闆、廚房、座位安排各自保存一份人數。",
+    failureHint: "先判斷這張卡是在收到新資訊，還是在使用既有資訊做事。收到新資訊要更新訂位資料；要安排工作時讀取訂位資料。",
     zones: [
-      { id: "truth", name: "唯一真相", hint: "真的在這裡修改" },
-      { id: "view", name: "只是顯示", hint: "讀真相後顯示或提醒" },
-      { id: "copy", name: "重複副本", hint: "自己抄一份，容易不同步" }
+      { id: "update", name: "更新訂位資料", hint: "把新資訊寫回 SSOT" },
+      { id: "read", name: "讀取訂位資料", hint: "從 SSOT 取得資訊" }
     ],
     items: [
-      { id: "sharedCalendar", label: "家庭共用行事曆", detail: "補習時間在這裡改", target: "truth" },
-      { id: "phoneWidget", label: "手機桌面小工具", detail: "顯示共用行事曆", target: "view" },
-      { id: "chatReminder", label: "群組提醒訊息", detail: "從行事曆發提醒", target: "view" },
-      { id: "fridgeCopy", label: "冰箱便利貼手抄一份", detail: "改時間容易漏改", target: "copy" },
-      { id: "paperCopy", label: "爸爸紙本手帳再寫一份", detail: "可能跟行事曆不同步", target: "copy" }
+      { id: "bossCall", label: "老闆接到電話：客人改成 8 人", detail: "新資訊進來", target: "update" },
+      { id: "arrivalCount", label: "服務生確認：現場來 7 人", detail: "新資訊進來", target: "update" },
+      { id: "seatingPlan", label: "座位安排：看訂位資料排桌位", detail: "使用資訊做事", target: "read" },
+      { id: "kitchenPrep", label: "廚房備料：看訂位資料準備份量", detail: "使用資訊做事", target: "read" }
     ]
   },
   {
     type: "互動關卡",
-    title: "健康資料的真相來源",
+    title: "訂位系統要更新還是讀取",
     mode: "sort",
-    sourceTitle: "App 裡的資料",
-    zoneTitle: "資料角色",
-    prompt: "回到健康管理 App。請分辨哪些資料應該直接保存成真相，哪些可以從真相算出來，哪些只是畫面顯示。",
-    success: "這就是程式裡的 SSOT：體重、目標、餐點紀錄是來源；已吃熱量和剩餘熱量可以算出來；畫面只是顯示結果。",
-    failureHint: "如果某個數字可以從其他資料算出來，通常不該再另外存一份。否則兩邊不同步時，你會不知道該相信誰。",
+    sourceTitle: "程式裡的動作",
+    zoneTitle: "對 reservation 做什麼",
+    prompt: "回到簡單訂位系統。訂位資料 reservation 是 SSOT，裡面可以有 partySize 和 arrivedCount。收到新資訊時要更新 reservation；頁面需要資料時要讀取 reservation。",
+    success: "現在比較清楚了：updatePartySize 和 updateArrivedCount 會更新 SSOT；座位頁和廚房頁只需要讀 reservation，不要自己保存一份人數。",
+    failureHint: "看到 update 通常是在把新資訊寫回 SSOT；看到 reads 通常是在使用 SSOT，不應該自己另存一份。",
     zones: [
-      { id: "source", name: "真相來源", hint: "直接保存的資料" },
-      { id: "derived", name: "由真相算出", hint: "需要時再計算" },
-      { id: "display", name: "只是畫面顯示", hint: "讀資料後呈現" }
+      { id: "update", name: "更新 reservation", hint: "把新資訊寫回 SSOT" },
+      { id: "read", name: "讀取 reservation", hint: "從 SSOT 取得資訊" }
     ],
     items: [
-      { id: "weight", label: "目前體重", detail: "profile.weight", target: "source" },
-      { id: "dailyGoal", label: "每日目標熱量", detail: "profile.dailyGoal", target: "source" },
-      { id: "mealRecords", label: "今日餐點紀錄", detail: "foodLog.meals", target: "source" },
-      { id: "eatenCalories", label: "今天已吃熱量", detail: "由餐點紀錄加總", target: "derived" },
-      { id: "remainingCalories", label: "今天剩餘熱量", detail: "由目標減已吃", target: "derived" },
-      { id: "dashboardNumber", label: "首頁上的剩餘熱量數字", detail: "dashboard 顯示", target: "display" }
+      { id: "updatePartySize", label: "updatePartySize(8)", detail: "客人改訂位人數", target: "update" },
+      { id: "updateArrived", label: "updateArrivedCount(7)", detail: "現場到場人數", target: "update" },
+      { id: "seatPageRead", label: "SeatPage reads reservation", detail: "安排座位時讀資料", target: "read" },
+      { id: "kitchenRead", label: "KitchenPage reads reservation", detail: "準備份量時讀資料", target: "read" }
     ]
   },
   {
@@ -474,7 +469,7 @@ function renderLevel() {
   nodes.taskText.textContent = `${isDevMode ? "[測試模式] " : ""}${level.prompt || "閱讀說明後進入下一關。"}`;
   hideResult();
   nodes.prevButton.disabled = currentLevel === 0;
-  nodes.nextButton.disabled = currentLevel >= unlockedLevel && level.mode === "sort";
+  nodes.nextButton.disabled = currentLevel >= unlockedLevel && isInteractiveLevel(level);
   nodes.nextButton.textContent = currentLevel === levels.length - 1 ? "完成" : "下一關";
   nodes.checkButton.disabled = completedLevels.has(currentLevel);
 
@@ -602,7 +597,7 @@ function getTargetForLevel(level, item) {
 
 function saveCurrentGameState() {
   const level = levels[currentLevel];
-  if (!level || level.mode !== "sort" || nodes.gamePanel.hidden) return;
+  if (!level || !isInteractiveLevel(level) || nodes.gamePanel.hidden) return;
 
   const placements = {};
   document.querySelectorAll(".tile").forEach((tile) => {
@@ -698,7 +693,7 @@ function updateRemaining() {
 
 function checkAnswers() {
   const level = levels[currentLevel];
-  if (level.mode !== "sort") return;
+  if (!isInteractiveLevel(level)) return;
 
   const items = getLevelItems(level);
   let wrongCount = 0;
@@ -737,6 +732,10 @@ function checkAnswers() {
       "bad"
     );
   }
+}
+
+function isInteractiveLevel(level) {
+  return level && level.mode === "sort";
 }
 
 function resetLevel() {
