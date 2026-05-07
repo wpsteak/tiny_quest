@@ -21,6 +21,7 @@ const levels = [
     zoneTitle: "家裡空間",
     prompt: "拖曳家具到最合理的房間。也可以先點家具，再點房間。",
     success: "整理完成：每個空間的責任更清楚了。",
+    failureHint: "先想這個家具通常在哪裡使用，而不是它現在被放在哪裡。",
     zones: [
       { id: "living", name: "客廳", hint: "休息、聊天、看電視" },
       { id: "bedroom", name: "臥室", hint: "睡眠與個人物品" },
@@ -44,6 +45,7 @@ const levels = [
     zoneTitle: "現有空間",
     prompt: "延續上一關的家，現在只多了一個啞鈴。家人只是想在客廳邊看電視邊練一下，這時候還不需要立刻新增健身房。請把這個小需求放到最自然的既有空間。",
     success: "這是合理的暫放：只有一個小需求時，先放在現有空間可以降低複雜度。模組化不是看到新東西就馬上拆新模組，而是先觀察責任是否真的變大。",
+    failureHint: "現在還沒有健身房。只有一個啞鈴時，想想哪個既有空間最能容納這個小需求。",
     zones: [
       { id: "living", name: "客廳", hint: "休息、看電視，也可容納小需求" },
       { id: "bedroom", name: "臥室", hint: "睡眠與個人物品" },
@@ -62,6 +64,7 @@ const levels = [
     zoneTitle: "重新規劃空間",
     prompt: "延續上一關，啞鈴先放客廳是可以的。但現在健身器材越來越多，客廳開始同時承擔休息和訓練兩種責任。請把健身相關物品集中到新的健身房。",
     success: "你把變大的同類責任抽成新空間了。這就是重構：當既有空間開始混亂，才把一群相關責任搬到新的模組。",
+    failureHint: "這次重點不是啞鈴能不能放客廳，而是健身相關物品變多後，是否值得集中到新空間。",
     zones: [
       { id: "living", name: "客廳", hint: "回到休息與招待" },
       { id: "bedroom", name: "臥室", hint: "睡眠與個人物品" },
@@ -99,6 +102,7 @@ const levels = [
     zoneTitle: "已建立模組",
     prompt: "先看功能卡的大字中文：它主要在處理哪一種資料？把它拖到最符合責任的模組。英文小字只是程式裡可能出現的 function 名稱。",
     success: "main 變薄了：它只需要協調流程，不必承擔所有細節。",
+    failureHint: "先看中文大字：它主要在處理個人資料、飲食紀錄、熱量，還是報告？",
     zones: [
       { id: "profile", name: "個人資料", hint: "profile" },
       { id: "foodLog", name: "飲食紀錄", hint: "foodLog" },
@@ -121,6 +125,7 @@ const levels = [
     zoneTitle: "現有模組",
     prompt: "延續上一關，main 已經變薄了。現在只新增一個「提醒今天記得記錄晚餐」的小功能。它不是在新增記錄，而是在提醒使用者去記錄；但因為目前只有一個提醒，先放在飲食紀錄旁邊是合理的，不需要急著拆新模組。",
     success: "這是合理的暫放：這張卡有「記錄」的意思，先放在飲食紀錄可以。但它真正做的事是提醒使用者，等提醒功能變多時，再考慮拆出提醒通知。",
+    failureHint: "這張卡有「記錄」的意思，但目前只有一個提醒功能。先找最接近的既有模組。",
     zones: [
       { id: "profile", name: "個人資料", hint: "profile" },
       { id: "foodLog", name: "飲食紀錄", hint: "foodLog，小提醒可先放這裡" },
@@ -140,6 +145,7 @@ const levels = [
     zoneTitle: "重新規劃模組",
     prompt: "延續上一關，一個晚餐記錄提醒先放在飲食紀錄還可以；但現在提醒功能變多了，飲食紀錄開始同時負責「保存吃了什麼」和「叫使用者去做事」。請新增提醒通知，把提醒類功能集中過去。",
     success: "現在更清楚了：飲食紀錄負責保存吃了什麼，提醒通知負責叫使用者去做事。一開始只有一個提醒，暫放在飲食紀錄可以；但提醒變多後，就值得拆成自己的模組。",
+    failureHint: "現在提醒功能變多了。想想哪些卡是在保存資料，哪些卡是在叫使用者去做事。",
     zones: [
       { id: "profile", name: "個人資料", hint: "profile" },
       { id: "foodLog", name: "飲食紀錄", hint: "保存吃了什麼" },
@@ -172,6 +178,7 @@ const nodes = {
   levelTitle: document.querySelector("#levelTitle"),
   progressText: document.querySelector("#progressText"),
   progressBar: document.querySelector("#progressBar"),
+  taskText: document.querySelector("#taskText"),
   explainPanel: document.querySelector("#explainPanel"),
   explainBody: document.querySelector("#explainBody"),
   gamePanel: document.querySelector("#gamePanel"),
@@ -179,7 +186,9 @@ const nodes = {
   zoneTitle: document.querySelector("#zoneTitle"),
   sourceItems: document.querySelector("#sourceItems"),
   dropZones: document.querySelector("#dropZones"),
-  feedback: document.querySelector("#feedback"),
+  resultPanel: document.querySelector("#resultPanel"),
+  resultLabel: document.querySelector("#resultLabel"),
+  resultText: document.querySelector("#resultText"),
   remainingCount: document.querySelector("#remainingCount"),
   checkButton: document.querySelector("#checkButton"),
   resetButton: document.querySelector("#resetButton"),
@@ -216,13 +225,8 @@ function renderLevel() {
   nodes.levelTitle.textContent = level.title;
   nodes.progressText.textContent = `${currentLevel + 1} / ${levels.length}`;
   nodes.progressBar.style.width = `${((currentLevel + 1) / levels.length) * 100}%`;
-  nodes.feedback.className = "feedback";
-  nodes.feedback.textContent = completedLevels.has(currentLevel)
-    ? "這一關已完成，結果已鎖定。需要修改時請先重置。"
-    : level.prompt || "閱讀說明後進入下一關。";
-  if (isDevMode) {
-    nodes.feedback.textContent = `[測試模式] ${nodes.feedback.textContent}`;
-  }
+  nodes.taskText.textContent = `${isDevMode ? "[測試模式] " : ""}${level.prompt || "閱讀說明後進入下一關。"}`;
+  hideResult();
   nodes.prevButton.disabled = currentLevel === 0;
   nodes.nextButton.disabled = currentLevel >= unlockedLevel && level.mode === "sort";
   nodes.nextButton.textContent = currentLevel === levels.length - 1 ? "完成" : "下一關";
@@ -232,15 +236,30 @@ function renderLevel() {
     nodes.explainPanel.hidden = false;
     nodes.gamePanel.hidden = true;
     nodes.explainBody.innerHTML = level.html;
-    nodes.resetButton.disabled = true;
   } else {
     nodes.explainPanel.hidden = true;
     nodes.gamePanel.hidden = false;
-    nodes.resetButton.disabled = false;
     renderGame(level);
+    if (completedLevels.has(currentLevel)) {
+      showResult("已完成", "這一關已完成，結果已鎖定。需要修改時請使用左側的「重置本關與後續」。", "ok");
+    }
   }
 
   renderNav();
+}
+
+function showResult(label, message, tone) {
+  nodes.resultPanel.hidden = false;
+  nodes.resultPanel.className = `result-panel ${tone}`;
+  nodes.resultLabel.textContent = label;
+  nodes.resultText.textContent = message;
+}
+
+function hideResult() {
+  nodes.resultPanel.hidden = true;
+  nodes.resultPanel.className = "result-panel";
+  nodes.resultLabel.textContent = "";
+  nodes.resultText.textContent = "";
 }
 
 function applyDevMode() {
@@ -457,8 +476,7 @@ function checkAnswers() {
   if (wrongCount === 0 && placedCount === items.length) {
     completedLevels.add(currentLevel);
     unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
-    nodes.feedback.className = "feedback ok";
-    nodes.feedback.textContent = level.success;
+    showResult("完成", level.success, "ok");
     nodes.nextButton.disabled = false;
     nodes.checkButton.disabled = true;
     document.querySelectorAll(".tile").forEach((tile) => {
@@ -467,8 +485,11 @@ function checkAnswers() {
     });
     renderNav();
   } else {
-    nodes.feedback.className = "feedback bad";
-    nodes.feedback.textContent = `還有 ${wrongCount} 個需要調整。綠色是正確位置，紅色是要重新思考的項目。`;
+    showResult(
+      "再想一下",
+      `還有 ${wrongCount} 個需要調整。${level.failureHint}`,
+      "bad"
+    );
   }
 }
 
@@ -502,8 +523,7 @@ nodes.nextButton.addEventListener("click", () => {
     currentLevel += 1;
     renderLevel();
   } else {
-    nodes.feedback.className = "feedback ok";
-    nodes.feedback.textContent = "課程原型完成。可以把這套資料結構擴充成更多主題關卡。";
+    showResult("完成", "課程原型完成。可以把這套資料結構擴充成更多主題關卡。", "ok");
   }
 });
 

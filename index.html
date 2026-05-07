@@ -17,6 +17,9 @@
           </div>
         </div>
         <ol id="levelList" class="level-list"></ol>
+        <div class="nav-actions">
+          <button id="resetButton" class="text-button" type="button">重置本關與後續</button>
+        </div>
       </aside>
 
       <section class="stage" aria-live="polite">
@@ -32,6 +35,11 @@
             </div>
           </div>
         </header>
+
+        <section id="taskCard" class="task-card">
+          <span class="task-label">任務</span>
+          <p id="taskText"></p>
+        </section>
 
         <article id="explainPanel" class="explain-panel" hidden>
           <div id="explainBody" class="explain-body"></div>
@@ -55,10 +63,13 @@
           </div>
         </article>
 
+        <section id="resultPanel" class="result-panel" hidden>
+          <span id="resultLabel" class="result-label"></span>
+          <p id="resultText"></p>
+        </section>
+
         <footer class="stage-footer">
-          <p id="feedback" class="feedback"></p>
           <div class="footer-actions">
-            <button id="resetButton" class="secondary-button" type="button">重置</button>
             <button id="prevButton" class="secondary-button" type="button">上一關</button>
             <button id="nextButton" class="primary-button" type="button">下一關</button>
           </div>
