@@ -1,7 +1,7 @@
 const levels = [
   {
     type: "說明",
-    title: "讓 AI 寫出可維護的程式",
+    title: "AI 寫得快，但你得看得住整個系統",
     mode: "explain",
     html: `
       <p>AI 很會產生程式碼。</p>
@@ -18,7 +18,7 @@ const levels = [
   },
   {
     type: "說明",
-    title: "AI 寫程式很快，但容易越改越亂",
+    title: "加到第三、第五個功能後，專案開始失控",
     mode: "explain",
     html: `
       <p class="lede">第三次、第五次加功能後，常見的失控：</p>
@@ -44,7 +44,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "把家具放回合適空間",
+    title: "剛搬進新家，家具該分到哪？",
     mode: "sort",
     sourceTitle: "家具堆",
     zoneTitle: "家裡空間",
@@ -86,7 +86,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "東西變多時，新增更清楚的空間",
+    title: "健身器材越來越多，客廳塞不下了",
     mode: "sort",
     cumulativeFrom: 4,
     sourceTitle: "又新增的物品",
@@ -110,7 +110,7 @@ const levels = [
   },
   {
     type: "說明",
-    title: "健康管理 App 可以怎麼拆",
+    title: "把剛剛的家對應回程式：要做健康管理 App",
     mode: "explain",
     html: `
       <p class="lede">把剛剛的家對應回程式：</p>
@@ -120,31 +120,30 @@ const levels = [
       </ul>
       <p>以健康管理 App 為例，可以依責任拆成幾個模組：</p>
       <ul>
-        <li><strong>個人資料 profile</strong>：身高、體重、年齡、目標。</li>
+        <li><strong>個人目標設定 goalSetting</strong>：身高、體重、年齡、目標。</li>
         <li><strong>飲食紀錄 foodLog</strong>：新增餐點、查詢每天吃了什麼。</li>
         <li><strong>熱量計算 calorie</strong>：把餐點或目標換算成熱量。</li>
         <li><strong>成果報告 report</strong>：整理週報、趨勢、提醒。</li>
       </ul>
-      <p class="muted">英文 function 名稱只放在小字當參考，不需要先背單字。</p>
     `
   },
   {
     type: "互動關卡",
-    title: "把功能卡分到模組",
+    title: "AI 把所有功能都塞進 main 了，怎麼分回模組？",
     mode: "sort",
     sourceTitle: "main 裡的功能卡",
     zoneTitle: "已建立模組",
     prompt: "先看功能卡的大字中文：它主要在處理哪一種資料？把它拖到最符合責任的模組。英文小字只是程式裡可能出現的 function 名稱。",
-    success: "main 變薄了：它只需要協調流程，不必承擔所有細節。",
-    failureHint: "先看中文大字：它主要在處理個人資料、飲食紀錄、熱量，還是報告？",
+    success: "現在 main 變小了：它只需要協調流程，細節交給各模組處理。",
+    failureHint: "先看中文大字：它主要在處理個人目標設定、飲食紀錄、熱量，還是報告？",
     zones: [
-      { id: "profile", name: "個人資料", hint: "profile" },
+      { id: "goalSetting", name: "個人目標設定", hint: "goalSetting" },
       { id: "foodLog", name: "飲食紀錄", hint: "foodLog" },
       { id: "calorie", name: "熱量計算", hint: "calorie" },
       { id: "report", name: "成果報告", hint: "report" }
     ],
     items: [
-      { id: "setGoal", label: "設定每日目標", detail: "setDailyGoal()", target: "profile" },
+      { id: "setGoal", label: "設定每日目標", detail: "setDailyGoal()", target: "goalSetting" },
       { id: "addMeal", label: "新增一餐記錄", detail: "addMeal()", target: "foodLog" },
       { id: "calcCalories", label: "計算這餐熱量", detail: "calculateMealCalories()", target: "calorie" },
       { id: "weekly", label: "產生每週報告", detail: "buildWeeklyReport()", target: "report" }
@@ -152,7 +151,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "小功能先留在既有模組",
+    title: "AI 又把晚餐提醒塞進 foodLog，這次該攔下來嗎？",
     mode: "sort",
     cumulativeFrom: 7,
     sourceTitle: "新增功能卡",
@@ -161,7 +160,7 @@ const levels = [
     success: "這是合理的暫放：這張卡有「記錄」的意思，先放在飲食紀錄可以。但它真正做的事是提醒使用者，等提醒功能變多時，再考慮拆出提醒通知。",
     failureHint: "這張卡有「記錄」的意思，但目前只有一個提醒功能。先找最接近的既有模組。",
     zones: [
-      { id: "profile", name: "個人資料", hint: "profile" },
+      { id: "goalSetting", name: "個人目標設定", hint: "goalSetting" },
       { id: "foodLog", name: "飲食紀錄", hint: "foodLog，小提醒可先放這裡" },
       { id: "calorie", name: "熱量計算", hint: "calorie" },
       { id: "report", name: "成果報告", hint: "report" }
@@ -172,7 +171,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "提醒變多後再拆模組",
+    title: "AI 一路把提醒都塞進飲食紀錄，是時候拆出來了",
     mode: "sort",
     cumulativeFrom: 8,
     sourceTitle: "又新增的提醒",
@@ -181,7 +180,7 @@ const levels = [
     success: "現在更清楚了：飲食紀錄負責保存吃了什麼，提醒通知負責叫使用者去做事。一開始只有一個提醒，暫放在飲食紀錄可以；但提醒變多後，就值得拆成自己的模組。",
     failureHint: "現在提醒功能變多了。想想哪些卡是在保存資料，哪些卡是在叫使用者去做事。",
     zones: [
-      { id: "profile", name: "個人資料", hint: "profile" },
+      { id: "goalSetting", name: "個人目標設定", hint: "goalSetting" },
       { id: "foodLog", name: "飲食紀錄", hint: "保存吃了什麼" },
       { id: "calorie", name: "熱量計算", hint: "calorie" },
       { id: "report", name: "成果報告", hint: "report" },
@@ -211,7 +210,7 @@ const levels = [
   },
   {
     type: "說明",
-    title: "SSOT：只認一個真相來源",
+    title: "同一件事，到底誰說了算？",
     mode: "explain",
     html: `
       <p><strong>SSOT</strong> 是 Single Source of Truth，意思是「同一件事只認一個真相來源」。</p>
@@ -221,7 +220,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "餐廳資料要更新還是讀取",
+    title: "客人一直改人數，餐廳要怎麼讓大家不混亂？",
     mode: "sort",
     sourceTitle: "餐廳動作",
     zoneTitle: "對訂位資料做什麼",
@@ -241,7 +240,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "訂位系統要更新還是讀取",
+    title: "AI 讓每個頁面各自存了一份 partySize，怎麼收回來？",
     mode: "sort",
     sourceTitle: "程式裡的動作",
     zoneTitle: "對 reservation 做什麼",
@@ -261,7 +260,7 @@ const levels = [
   },
   {
     type: "說明",
-    title: "DRY：不要重複自己",
+    title: "同一條規則複製三份，改的時候會漏掉哪份？",
     mode: "explain",
     html: `
       <p><strong>DRY</strong> 是 Don't Repeat Yourself，意思是「不要把同一套規則到處複製」。</p>
@@ -271,7 +270,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "折扣規則不要各自背一套",
+    title: "折扣規則改了，不想再一個一個店員去通知",
     mode: "sort",
     sourceTitle: "折扣規則",
     zoneTitle: "整理方式",
@@ -293,7 +292,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "重複檢查規則要抽出來",
+    title: "AI 在三個頁面各複製了一份 Email 驗證規則",
     mode: "sort",
     sourceTitle: "Email 檢查功能",
     zoneTitle: "DRY 整理",
@@ -316,7 +315,7 @@ const levels = [
   },
   {
     type: "說明",
-    title: "KISS：先保持簡單",
+    title: "下一個維護的人能不能五分鐘內看懂你的設計？",
     mode: "explain",
     html: `
       <p><strong>KISS</strong> 是 Keep It Simple，意思是「先讓設計簡單」。</p>
@@ -326,7 +325,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "班級點名先簡單",
+    title: "老師需要班級點名工具，第一版做到哪裡就夠？",
     mode: "sort",
     sourceTitle: "點名工具功能",
     zoneTitle: "現在要不要做",
@@ -348,7 +347,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "簡單登入不要做成大架構",
+    title: "只是要做簡單登入，AI 卻丟出一整套大架構",
     mode: "sort",
     sourceTitle: "AI 提出的登入設計",
     zoneTitle: "KISS 判斷",
@@ -371,7 +370,7 @@ const levels = [
   },
   {
     type: "說明",
-    title: "最小改動：只改真正需要改的地方",
+    title: "需求只動一格，要怎麼擋住順手大改的衝動？",
     mode: "explain",
     html: `
       <p><strong>最小改動原則</strong> 是：需求只要改一小件事，就不要順手重寫一大片。</p>
@@ -381,7 +380,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "改價格，不要重裝潢",
+    title: "雞腿飯要漲 10 元，要動到哪些地方才算對？",
     mode: "sort",
     sourceTitle: "可能的改動",
     zoneTitle: "改動範圍",
@@ -402,7 +401,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "請 AI 改設定，也要控制範圍",
+    title: "提醒時間要晚一小時，怎麼請 AI 不要順便重構？",
     mode: "sort",
     sourceTitle: "AI 想改的地方",
     zoneTitle: "是否該改",
@@ -426,6 +425,7 @@ const levels = [
 let currentLevel = 0;
 let unlockedLevel = 0;
 let selectedTileId = null;
+let advanceTimer = null;
 const gameStates = {};
 const completedLevels = new Set();
 const params = new URLSearchParams(window.location.search);
@@ -451,9 +451,7 @@ const nodes = {
   resultLabel: document.querySelector("#resultLabel"),
   resultText: document.querySelector("#resultText"),
   remainingCount: document.querySelector("#remainingCount"),
-  checkButton: document.querySelector("#checkButton"),
   resetButton: document.querySelector("#resetButton"),
-  prevButton: document.querySelector("#prevButton"),
   nextButton: document.querySelector("#nextButton")
 };
 
@@ -480,6 +478,10 @@ function renderNav() {
 }
 
 function renderLevel() {
+  if (advanceTimer) {
+    clearTimeout(advanceTimer);
+    advanceTimer = null;
+  }
   const level = levels[currentLevel];
   selectedTileId = null;
   nodes.levelType.textContent = level.type;
@@ -488,10 +490,7 @@ function renderLevel() {
   nodes.progressBar.style.width = `${((currentLevel + 1) / levels.length) * 100}%`;
   nodes.taskText.textContent = `${isDevMode ? "[測試模式] " : ""}${level.prompt || "閱讀說明後進入下一關。"}`;
   hideResult();
-  nodes.prevButton.disabled = currentLevel === 0;
-  nodes.nextButton.disabled = currentLevel >= unlockedLevel && isInteractiveLevel(level);
-  nodes.nextButton.textContent = currentLevel === levels.length - 1 ? "完成" : "下一關";
-  nodes.checkButton.disabled = completedLevels.has(currentLevel);
+  updateMainButton(level);
 
   document.body.classList.toggle("mode-explain", level.mode === "explain");
 
@@ -511,6 +510,43 @@ function renderLevel() {
   }
 
   renderNav();
+}
+
+function updateMainButton(level) {
+  const isLast = currentLevel === levels.length - 1;
+  const needsValidation = isInteractiveLevel(level) && !completedLevels.has(currentLevel);
+  if (needsValidation) {
+    nodes.nextButton.textContent = "驗證";
+  } else if (isLast) {
+    nodes.nextButton.textContent = "完成";
+  } else {
+    nodes.nextButton.textContent = level.mode === "explain" ? "繼續" : "下一關";
+  }
+  nodes.nextButton.disabled = false;
+}
+
+function handleMainAction() {
+  const level = levels[currentLevel];
+  if (isInteractiveLevel(level) && !completedLevels.has(currentLevel)) {
+    checkAnswers();
+  } else {
+    advanceLevel();
+  }
+}
+
+function advanceLevel() {
+  const level = levels[currentLevel];
+  if (level.mode === "explain") {
+    unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
+  }
+  if (currentLevel < levels.length - 1) {
+    if (currentLevel + 1 > unlockedLevel) return;
+    saveCurrentGameState();
+    currentLevel += 1;
+    renderLevel();
+  } else {
+    showResult("完成", "課程原型完成。可以把這套資料結構擴充成更多主題關卡。", "ok");
+  }
 }
 
 function showResult(label, message, tone) {
@@ -764,13 +800,21 @@ function checkAnswers() {
     completedLevels.add(currentLevel);
     unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
     showResult("完成", level.success, "ok");
-    nodes.nextButton.disabled = false;
-    nodes.checkButton.disabled = true;
     document.querySelectorAll(".tile").forEach((tile) => {
       tile.draggable = false;
       tile.disabled = true;
     });
     renderNav();
+    if (currentLevel < levels.length - 1) {
+      advanceTimer = setTimeout(() => {
+        advanceTimer = null;
+        saveCurrentGameState();
+        currentLevel += 1;
+        renderLevel();
+      }, 1200);
+    } else {
+      updateMainButton(level);
+    }
   } else {
     showResult(
       "再想一下",
@@ -793,30 +837,8 @@ function resetLevel() {
   renderLevel();
 }
 
-nodes.checkButton.addEventListener("click", checkAnswers);
 nodes.resetButton.addEventListener("click", resetLevel);
-nodes.prevButton.addEventListener("click", () => {
-  if (currentLevel > 0) {
-    saveCurrentGameState();
-    currentLevel -= 1;
-    renderLevel();
-  }
-});
-nodes.nextButton.addEventListener("click", () => {
-  const level = levels[currentLevel];
-  if (level.mode === "explain") {
-    unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
-  }
-
-  if (currentLevel < levels.length - 1) {
-    if (currentLevel + 1 > unlockedLevel) return;
-    saveCurrentGameState();
-    currentLevel += 1;
-    renderLevel();
-  } else {
-    showResult("完成", "課程原型完成。可以把這套資料結構擴充成更多主題關卡。", "ok");
-  }
-});
+nodes.nextButton.addEventListener("click", handleMainAction);
 
 applyDevMode();
 renderLevel();
