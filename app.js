@@ -72,7 +72,7 @@ const levels = [
     cumulativeFrom: 3,
     sourceTitle: "新增物品",
     zoneTitle: "現有空間",
-    prompt: "延續上一關的家，現在家人多了一個想在客廳邊看電視邊練一下啞鈴的需求。",
+    prompt: "延續上一關的家，現在家人多了一個想在客廳邊看電視邊練一下啞鈴的需求。請將啞鈴放到最符合需求的空間。",
     success: "這是合理的暫放：只有一個小需求時，先放在現有空間可以降低複雜度。模組化不是看到新東西就馬上拆新模組，而是先觀察責任是否真的變大。",
     failureHint: "現在還沒有健身房。只有一個啞鈴時，想想哪個既有空間最能容納這個小需求。",
     zones: [
@@ -631,6 +631,26 @@ function saveCurrentGameState() {
   gameStates[currentLevel] = placements;
 }
 
+function invalidateDownstreamFrom(ancestor) {
+  for (let i = ancestor + 1; i < levels.length; i += 1) {
+    if (dependsOn(i, ancestor)) {
+      delete gameStates[i];
+      completedLevels.delete(i);
+    }
+  }
+}
+
+function dependsOn(level, ancestor) {
+  let current = level;
+  while (current !== undefined) {
+    const cf = levels[current] && levels[current].cumulativeFrom;
+    if (cf === undefined) return false;
+    if (cf === ancestor) return true;
+    current = cf;
+  }
+  return false;
+}
+
 function createTile(item) {
   const tile = document.createElement("button");
   tile.className = "tile";
@@ -686,6 +706,7 @@ function handleDropToSource(event) {
     clearTileState(tile);
     nodes.sourceItems.append(tile);
     saveCurrentGameState();
+    invalidateDownstreamFrom(currentLevel);
     updateRemaining();
   }
 }
@@ -703,6 +724,7 @@ function moveTileToZone(tile, zone) {
   zone.querySelector(".drop-zone-items").append(tile);
   selectedTileId = null;
   saveCurrentGameState();
+  invalidateDownstreamFrom(currentLevel);
   updateRemaining();
 }
 
