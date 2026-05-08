@@ -510,10 +510,12 @@ function renderNav() {
     const chapterLi = document.createElement("li");
     chapterLi.className = "chapter";
 
+    const containsCurrent = currentLevel >= start && currentLevel <= end;
     const toggle = document.createElement("button");
     toggle.className = "chapter-toggle";
     toggle.type = "button";
     toggle.setAttribute("aria-expanded", String(isExpanded));
+    toggle.setAttribute("aria-current", String(containsCurrent));
     toggle.innerHTML = `
       <span class="chapter-chevron" aria-hidden="true">${isExpanded ? "▾" : "▸"}</span>
       <span class="chapter-name">${chapter.name}</span>
@@ -564,7 +566,6 @@ function renderNav() {
 }
 
 function renderLevel() {
-  expandedChapters.add(getChapterIndexOfLevel(currentLevel));
   const level = levels[currentLevel];
   selectedTileId = null;
   nodes.levelType.textContent = level.type;
@@ -945,4 +946,5 @@ nodes.resetButton.addEventListener("click", resetLevel);
 nodes.nextButton.addEventListener("click", handleMainAction);
 
 applyDevMode();
+expandedChapters.add(getChapterIndexOfLevel(currentLevel));
 renderLevel();

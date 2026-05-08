@@ -132,6 +132,15 @@ button {
   background: rgba(0, 0, 0, 0.04);
 }
 
+.chapter-toggle[aria-current="true"] .chapter-name {
+  color: var(--accent-dark);
+}
+
+.chapter-toggle[aria-current="true"] .chapter-badge {
+  color: var(--accent-dark);
+  background: #e8f0fe;
+}
+
 .chapter-chevron {
   font-size: 11px;
   color: var(--muted);
