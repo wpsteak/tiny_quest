@@ -1,32 +1,45 @@
 const levels = [
   {
     type: "說明",
-    title: "AI 很會加功能，但不一定會維持整潔",
+    title: "讓 AI 寫出可維護的程式",
     mode: "explain",
     html: `
-      <p>用 AI coding 做小工具時，第一版通常很快。真正的問題常出現在第三次、第五次加功能：功能塞錯地方、資料複製多份、相同規則到處重寫、小需求改太多，或簡單工具被做成複雜架構。</p>
-      <p>這堂課不是先教語法，而是教你看懂「專案為什麼開始變亂」，以及怎麼指揮 AI 把它整理回來。</p>
+      <p>AI 很會產生程式碼。</p>
+      <p class="lede">但 AI <strong>缺乏大局觀</strong>。它只看眼前的任務，不看整個系統。</p>
+      <p>所以 AI 不會主動替你維持:</p>
       <ul>
-        <li><strong>SRP / 重構</strong>：功能變多時，責任要重新整理。</li>
-        <li><strong>SSOT</strong>：同一份資料只認一個真相來源。</li>
-        <li><strong>DRY</strong>：同一條規則不要複製很多份。</li>
-        <li><strong>KISS</strong>：先保持簡單，不要過度設計。</li>
-        <li><strong>最小改動</strong>：修改時控制影響範圍。</li>
+        <li>系統邊界</li>
+        <li>資料一致性</li>
+        <li>長期可維護性</li>
       </ul>
+      <p class="lede"><strong>人負責架構判斷，AI 負責加速實作。</strong></p>
+      <p class="muted">這堂課的目標：練架構判斷的眼光，而不是背 SRP / SSOT / DRY 這些名詞。</p>
     `
   },
   {
     type: "說明",
-    title: "寫程式像打造家裡隔間",
+    title: "AI 寫程式很快，但容易越改越亂",
     mode: "explain",
     html: `
-      <p>一開始所有東西都堆在同一個大空間裡，找東西會變慢，也很容易互相干擾。程式如果所有邏輯都塞在 <strong>main</strong> 裡，也會遇到同樣問題。</p>
-      <p>模組化就像替家裡隔間：客廳處理聊天與休息，廚房處理料理，臥室處理睡眠。每個空間有清楚責任，彼此用門、走道和規則連接。</p>
+      <p class="lede">第三次、第五次加功能後，常見的失控：</p>
       <ul>
-        <li><strong>空間</strong> 像 module：負責一類事情。</li>
-        <li><strong>家具</strong> 像 function：放在最能說明用途的位置。</li>
-        <li><strong>門口規則</strong> 像 input / output：外部只需要知道怎麼使用，不必知道裡面怎麼擺。</li>
+        <li>功能塞錯位置</li>
+        <li>同一份資料各存一份</li>
+        <li>同一條規則複製好幾次</li>
+        <li>小需求被做成大架構</li>
       </ul>
+      <p>這堂課要練的：<strong>看懂亂在哪，以及怎麼指揮 AI 整理回來</strong>。</p>
+      <p class="muted">會帶到的五個原則:&nbsp;SRP / SSOT / DRY / KISS / 最小改動</p>
+    `
+  },
+  {
+    type: "說明",
+    title: "想像你剛搬進一個什麼都沒有的新家",
+    mode: "explain",
+    html: `
+      <p>搬家工人把所有家具堆在門口：沙發、床、鍋子、衣櫃全混在一起。</p>
+      <p class="lede">程式如果全部塞在 <code>main</code> 裡，就是這種感覺。</p>
+      <p>接下來你要做的事：<strong>幫這個家分出空間</strong>。</p>
     `
   },
   {
@@ -35,7 +48,7 @@ const levels = [
     mode: "sort",
     sourceTitle: "家具堆",
     zoneTitle: "家裡空間",
-    prompt: "拖曳家具到最合理的房間。也可以先點家具，再點房間。",
+    prompt: "空間責任練習：拖曳家具到最合理的房間。也可以先點家具，再點房間。",
     success: "整理完成：每個空間的責任更清楚了。",
     failureHint: "先想這個家具通常在哪裡使用，而不是它現在被放在哪裡。",
     zones: [
@@ -56,10 +69,10 @@ const levels = [
     type: "互動關卡",
     title: "小需求先放在現有空間",
     mode: "sort",
-    cumulativeFrom: 2,
+    cumulativeFrom: 3,
     sourceTitle: "新增物品",
     zoneTitle: "現有空間",
-    prompt: "延續上一關的家，現在只多了一個啞鈴。家人只是想在客廳邊看電視邊練一下，這時候還不需要立刻新增健身房。請把這個小需求放到最自然的既有空間。",
+    prompt: "延續上一關的家，現在家人多了一個想在客廳邊看電視邊練一下啞鈴的需求。",
     success: "這是合理的暫放：只有一個小需求時，先放在現有空間可以降低複雜度。模組化不是看到新東西就馬上拆新模組，而是先觀察責任是否真的變大。",
     failureHint: "現在還沒有健身房。只有一個啞鈴時，想想哪個既有空間最能容納這個小需求。",
     zones: [
@@ -75,7 +88,7 @@ const levels = [
     type: "互動關卡",
     title: "東西變多時，新增更清楚的空間",
     mode: "sort",
-    cumulativeFrom: 3,
+    cumulativeFrom: 4,
     sourceTitle: "又新增的物品",
     zoneTitle: "重新規劃空間",
     prompt: "延續上一關，啞鈴先放客廳是可以的。但現在健身器材越來越多，客廳開始同時承擔休息和訓練兩種責任。請把健身相關物品集中到新的健身房。",
@@ -100,14 +113,19 @@ const levels = [
     title: "健康管理 App 可以怎麼拆",
     mode: "explain",
     html: `
-      <p>以健康管理或卡路里計算器為例，功能可以依照責任拆成幾個模組。這不是為了把檔案變多，而是讓每個地方只回答一類問題。</p>
+      <p class="lede">把剛剛的家對應回程式：</p>
+      <ul>
+        <li>空間 = module（負責一類事情）</li>
+        <li>家具 = function（放在最能說明用途的位置）</li>
+      </ul>
+      <p>以健康管理 App 為例，可以依責任拆成幾個模組：</p>
       <ul>
         <li><strong>個人資料 profile</strong>：身高、體重、年齡、目標。</li>
         <li><strong>飲食紀錄 foodLog</strong>：新增餐點、查詢每天吃了什麼。</li>
         <li><strong>熱量計算 calorie</strong>：把餐點或目標換算成熱量。</li>
         <li><strong>成果報告 report</strong>：整理週報、趨勢、提醒。</li>
       </ul>
-      <p>接下來先看中文功能卡。英文 function 名稱只放在小字當參考，不需要先背單字。</p>
+      <p class="muted">英文 function 名稱只放在小字當參考，不需要先背單字。</p>
     `
   },
   {
@@ -136,7 +154,7 @@ const levels = [
     type: "互動關卡",
     title: "小功能先留在既有模組",
     mode: "sort",
-    cumulativeFrom: 6,
+    cumulativeFrom: 7,
     sourceTitle: "新增功能卡",
     zoneTitle: "現有模組",
     prompt: "延續上一關，main 已經變薄了。現在只新增一個「提醒今天記得記錄晚餐」的小功能。它不是在新增記錄，而是在提醒使用者去記錄；但因為目前只有一個提醒，先放在飲食紀錄旁邊是合理的，不需要急著拆新模組。",
@@ -156,7 +174,7 @@ const levels = [
     type: "互動關卡",
     title: "提醒變多後再拆模組",
     mode: "sort",
-    cumulativeFrom: 7,
+    cumulativeFrom: 8,
     sourceTitle: "又新增的提醒",
     zoneTitle: "重新規劃模組",
     prompt: "延續上一關，一個晚餐記錄提醒先放在飲食紀錄還可以；但現在提醒功能變多了，飲食紀錄開始同時負責「保存吃了什麼」和「叫使用者去做事」。請新增提醒通知，把提醒類功能集中過去。",
@@ -422,6 +440,8 @@ const nodes = {
   taskText: document.querySelector("#taskText"),
   explainPanel: document.querySelector("#explainPanel"),
   explainBody: document.querySelector("#explainBody"),
+  explainTitle: document.querySelector("#explainTitle"),
+  explainProgress: document.querySelector("#explainProgress"),
   gamePanel: document.querySelector("#gamePanel"),
   sourceTitle: document.querySelector("#sourceTitle"),
   zoneTitle: document.querySelector("#zoneTitle"),
@@ -473,9 +493,13 @@ function renderLevel() {
   nodes.nextButton.textContent = currentLevel === levels.length - 1 ? "完成" : "下一關";
   nodes.checkButton.disabled = completedLevels.has(currentLevel);
 
+  document.body.classList.toggle("mode-explain", level.mode === "explain");
+
   if (level.mode === "explain") {
     nodes.explainPanel.hidden = false;
     nodes.gamePanel.hidden = true;
+    nodes.explainTitle.textContent = level.title;
+    nodes.explainProgress.textContent = `${currentLevel + 1} / ${levels.length}`;
     nodes.explainBody.innerHTML = level.html;
   } else {
     nodes.explainPanel.hidden = true;

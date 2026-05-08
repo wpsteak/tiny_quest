@@ -249,20 +249,97 @@ button {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
-  padding: 26px;
+  padding: 36px 56px;
+  border: 1px solid #e3e7ee;
+  border-radius: 4px;
+  background: #f7f9fb;
+  box-shadow: none;
+}
+
+.mode-explain .task-card,
+.mode-explain .stage-header {
+  display: none;
+}
+
+.mode-explain .stage {
+  gap: 12px;
+  padding: 24px 28px;
+}
+
+.mode-explain .stage-footer {
+  padding: 10px 16px;
+}
+
+.explain-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin: 0 auto 18px;
+  padding-bottom: 14px;
+  max-width: 880px;
+  border-bottom: 1px solid #dde3ec;
+}
+
+.explain-head h2 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.25;
+  color: #0b2545;
+}
+
+.explain-progress {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
 }
 
 .explain-body {
   display: grid;
-  gap: 16px;
-  max-width: 860px;
-  font-size: 18px;
-  line-height: 1.75;
+  gap: 12px;
+  max-width: 880px;
+  margin: 0 auto;
+  color: #1f2933;
+  font-size: 20px;
+  line-height: 1.6;
 }
 
 .explain-body ul {
   margin: 0;
   padding-left: 1.2em;
+}
+
+.explain-body ul li {
+  margin: 2px 0;
+}
+
+.explain-body .lede {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #0b2545;
+}
+
+.explain-body .lede strong {
+  color: #c5221f;
+}
+
+.explain-body strong {
+  color: #1967d2;
+}
+
+.explain-body .muted {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.explain-body code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #eef2f7;
+  font-size: 0.9em;
 }
 
 .game-panel {
