@@ -136,9 +136,18 @@ button {
   color: var(--accent-dark);
 }
 
-.chapter-toggle[aria-current="true"] .chapter-badge {
+.chapter-toggle[aria-current="true"] .chapter-chevron {
   color: var(--accent-dark);
-  background: #e8f0fe;
+}
+
+.chapter-toggle[aria-current="true"] .chapter-badge {
+  color: #fff;
+  background: var(--accent);
+}
+
+.chapter:has(.chapter-toggle[aria-current="true"]) {
+  border-radius: 8px;
+  background: rgba(25, 103, 210, 0.05);
 }
 
 .chapter-chevron {
@@ -166,9 +175,9 @@ button {
 .chapter-levels {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin: 2px 0 6px;
-  padding: 0 0 0 14px;
+  gap: 4px;
+  margin: 0;
+  padding: 2px 8px 8px;
   list-style: none;
 }
 
@@ -179,11 +188,11 @@ button {
 .level-button {
   width: 100%;
   display: grid;
-  grid-template-columns: 10px 1fr auto;
+  grid-template-columns: auto 1fr;
   gap: 10px;
   align-items: start;
   padding: 8px 10px;
-  border: 1px solid transparent;
+  border: 1px solid var(--line);
   border-radius: 6px;
   background: #fff;
   color: var(--ink);
@@ -193,13 +202,14 @@ button {
   cursor: pointer;
 }
 
-.level-button:hover:not(:disabled) {
+.level-button:hover:not(:disabled):not([aria-current="true"]) {
   background: #f4f6f9;
 }
 
 .level-button[aria-current="true"] {
-  border-color: var(--accent);
-  background: #e8f0fe;
+  border-color: var(--accent-dark);
+  background: var(--accent);
+  color: #fff;
 }
 
 .level-button:disabled {
@@ -207,31 +217,36 @@ button {
   color: var(--muted);
 }
 
-.level-type {
-  width: 8px;
-  height: 8px;
-  margin-top: 7px;
+.level-num {
+  min-width: 26px;
+  margin-top: 1px;
+  padding: 2px 7px;
   border-radius: 999px;
-  background: #c4d4f0;
+  background: #dde6f4;
+  color: var(--accent-dark);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
-.level-button.is-sort .level-type {
-  background: #f0a86b;
+.level-button.is-sort .level-num {
+  background: #fde3c8;
+  color: #b85c00;
 }
 
-.level-button:disabled .level-type {
-  background: #d8dadd;
+.level-button:disabled .level-num {
+  background: #e6e8ec;
+  color: var(--muted);
+}
+
+.level-button[aria-current="true"] .level-num {
+  background: #fff;
+  color: var(--accent-dark);
 }
 
 .level-title {
   min-width: 0;
-}
-
-.level-seq {
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
 }
 
 .nav-actions {

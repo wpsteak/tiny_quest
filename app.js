@@ -545,9 +545,8 @@ function renderNav() {
         button.disabled = !isUnlocked;
         button.setAttribute("aria-current", String(i === currentLevel));
         button.innerHTML = `
-          <span class="level-type" aria-hidden="true"></span>
+          <span class="level-num">${i + 1}</span>
           <span class="level-title">${level.title}</span>
-          <span class="level-seq">${i + 1}</span>
         `;
         button.addEventListener("click", () => {
           if (!isUnlocked) return;
