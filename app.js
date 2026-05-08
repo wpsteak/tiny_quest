@@ -425,7 +425,6 @@ const levels = [
 let currentLevel = 0;
 let unlockedLevel = 0;
 let selectedTileId = null;
-let advanceTimer = null;
 const gameStates = {};
 const completedLevels = new Set();
 const params = new URLSearchParams(window.location.search);
@@ -447,9 +446,9 @@ const nodes = {
   zoneTitle: document.querySelector("#zoneTitle"),
   sourceItems: document.querySelector("#sourceItems"),
   dropZones: document.querySelector("#dropZones"),
-  resultPanel: document.querySelector("#resultPanel"),
-  resultLabel: document.querySelector("#resultLabel"),
-  resultText: document.querySelector("#resultText"),
+  taskActionBar: document.querySelector("#taskActionBar"),
+  taskHint: document.querySelector("#taskHint"),
+  footerActions: document.querySelector(".footer-actions"),
   remainingCount: document.querySelector("#remainingCount"),
   resetButton: document.querySelector("#resetButton"),
   nextButton: document.querySelector("#nextButton")
@@ -478,10 +477,6 @@ function renderNav() {
 }
 
 function renderLevel() {
-  if (advanceTimer) {
-    clearTimeout(advanceTimer);
-    advanceTimer = null;
-  }
   const level = levels[currentLevel];
   selectedTileId = null;
   nodes.levelType.textContent = level.type;
@@ -489,23 +484,25 @@ function renderLevel() {
   nodes.progressText.textContent = `${currentLevel + 1} / ${levels.length}`;
   nodes.progressBar.style.width = `${((currentLevel + 1) / levels.length) * 100}%`;
   nodes.taskText.textContent = `${isDevMode ? "[測試模式] " : ""}${level.prompt || "閱讀說明後進入下一關。"}`;
-  hideResult();
+  hideTaskHint();
   updateMainButton(level);
 
   document.body.classList.toggle("mode-explain", level.mode === "explain");
 
   if (level.mode === "explain") {
+    nodes.footerActions.appendChild(nodes.nextButton);
     nodes.explainPanel.hidden = false;
     nodes.gamePanel.hidden = true;
     nodes.explainTitle.textContent = level.title;
     nodes.explainProgress.textContent = `${currentLevel + 1} / ${levels.length}`;
     nodes.explainBody.innerHTML = level.html;
   } else {
+    nodes.taskActionBar.appendChild(nodes.nextButton);
     nodes.explainPanel.hidden = true;
     nodes.gamePanel.hidden = false;
     renderGame(level);
-    if (completedLevels.has(currentLevel)) {
-      showResult("已完成", "這一關已完成，結果已鎖定。需要修改時請使用左側的「重置本關與後續」。", "ok");
+    if (currentLevel === levels.length - 1 && completedLevels.has(currentLevel)) {
+      showCompletionMessage();
     }
   }
 
@@ -544,23 +541,28 @@ function advanceLevel() {
     saveCurrentGameState();
     currentLevel += 1;
     renderLevel();
-  } else {
-    showResult("完成", "課程原型完成。可以把這套資料結構擴充成更多主題關卡。", "ok");
   }
 }
 
-function showResult(label, message, tone) {
-  nodes.resultPanel.hidden = false;
-  nodes.resultPanel.className = `result-panel ${tone}`;
-  nodes.resultLabel.textContent = label;
-  nodes.resultText.textContent = message;
+function showFailureHint(message) {
+  nodes.taskHint.textContent = message;
+  nodes.taskHint.hidden = false;
+  nodes.taskActionBar.classList.add("bad");
+  nodes.taskActionBar.classList.remove("done");
 }
 
-function hideResult() {
-  nodes.resultPanel.hidden = true;
-  nodes.resultPanel.className = "result-panel";
-  nodes.resultLabel.textContent = "";
-  nodes.resultText.textContent = "";
+function hideTaskHint() {
+  nodes.taskHint.hidden = true;
+  nodes.taskHint.textContent = "";
+  nodes.taskActionBar.classList.remove("bad", "done");
+}
+
+function showCompletionMessage() {
+  nodes.taskHint.textContent = "課程完成。";
+  nodes.taskHint.hidden = false;
+  nodes.taskActionBar.classList.add("done");
+  nodes.taskActionBar.classList.remove("bad");
+  nodes.nextButton.disabled = true;
 }
 
 function applyDevMode() {
@@ -744,6 +746,7 @@ function handleDropToSource(event) {
     saveCurrentGameState();
     invalidateDownstreamFrom(currentLevel);
     updateRemaining();
+    hideTaskHint();
   }
 }
 
@@ -762,6 +765,7 @@ function moveTileToZone(tile, zone) {
   saveCurrentGameState();
   invalidateDownstreamFrom(currentLevel);
   updateRemaining();
+  hideTaskHint();
 }
 
 function clearTileState(tile) {
@@ -799,28 +803,21 @@ function checkAnswers() {
   if (wrongCount === 0 && placedCount === items.length) {
     completedLevels.add(currentLevel);
     unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
-    showResult("完成", level.success, "ok");
     document.querySelectorAll(".tile").forEach((tile) => {
       tile.draggable = false;
       tile.disabled = true;
     });
-    renderNav();
     if (currentLevel < levels.length - 1) {
-      advanceTimer = setTimeout(() => {
-        advanceTimer = null;
-        saveCurrentGameState();
-        currentLevel += 1;
-        renderLevel();
-      }, 1200);
+      saveCurrentGameState();
+      currentLevel += 1;
+      renderLevel();
     } else {
       updateMainButton(level);
+      renderNav();
+      showCompletionMessage();
     }
   } else {
-    showResult(
-      "再想一下",
-      `還有 ${wrongCount} 個需要調整。${level.failureHint}`,
-      "bad"
-    );
+    showFailureHint(`還有 ${wrongCount} 個需要調整。${level.failureHint}`);
   }
 }
 
