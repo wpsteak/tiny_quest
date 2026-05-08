@@ -234,23 +234,25 @@ button {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: 12px;
-  row-gap: 6px;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.task-text-block p {
+.task-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.task-row p {
   margin: 0;
   line-height: 1.6;
-}
-
-#taskText {
-  flex: 1 1 240px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .task-hint {
-  flex: 1 1 100%;
+  margin-top: 2px;
   color: var(--bad);
   font-size: 14px;
 }
@@ -270,25 +272,23 @@ button {
 
 .task-label {
   display: inline-grid;
-  min-height: 26px;
+  min-height: 24px;
   align-items: center;
-  padding: 3px 9px;
+  padding: 2px 9px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   white-space: nowrap;
+}
+
+.task-label-context {
+  color: #b85c00;
+  background: #fff3e0;
+}
+
+.task-label-goal {
   color: var(--accent-dark);
   background: #e8f0fe;
-}
-
-.task-action-bar.bad .task-label {
-  color: var(--bad);
-  background: #fce8e6;
-}
-
-.task-action-bar.done .task-label {
-  color: var(--ok);
-  background: #e6f4ea;
 }
 
 .explain-panel {

@@ -48,7 +48,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "家具堆",
     zoneTitle: "家裡空間",
-    prompt: "空間責任練習：拖曳家具到最合理的房間。也可以先點家具，再點房間。",
+    context: "你剛搬好家，<strong>所有家具還堆在門口</strong>，得把它們安頓進合適的房間。",
+    goal: "把每件家具拖到最合理的房間（也可以先點家具，再點房間）。",
     success: "整理完成：每個空間的責任更清楚了。",
     failureHint: "先想這個家具通常在哪裡使用，而不是它現在被放在哪裡。",
     zones: [
@@ -72,7 +73,8 @@ const levels = [
     cumulativeFrom: 3,
     sourceTitle: "新增物品",
     zoneTitle: "現有空間",
-    prompt: "延續上一關的家，現在家人多了一個想在客廳邊看電視邊練一下啞鈴的需求。請將啞鈴放到最符合需求的空間。",
+    context: "延續上一關的家。<strong>家人多了一個小需求：想在客廳邊看電視邊練一下啞鈴</strong>。",
+    goal: "把啞鈴放到最符合這個需求的空間。",
     success: "這是合理的暫放：只有一個小需求時，先放在現有空間可以降低複雜度。模組化不是看到新東西就馬上拆新模組，而是先觀察責任是否真的變大。",
     failureHint: "現在還沒有健身房。只有一個啞鈴時，想想哪個既有空間最能容納這個小需求。",
     zones: [
@@ -91,9 +93,10 @@ const levels = [
     cumulativeFrom: 4,
     sourceTitle: "又新增的物品",
     zoneTitle: "重新規劃空間",
-    prompt: "延續上一關，啞鈴先放客廳是可以的。但現在健身器材越來越多，客廳開始同時承擔休息和訓練兩種責任。請把健身相關物品集中到新的健身房。",
+    context: "上一關啞鈴先放客廳是合理的暫放，但<strong>健身器材越來越多，客廳空間開始不夠放了</strong>。",
+    goal: "把健身相關物品集中到新的專屬空間：健身房。",
     success: "你把變大的同類責任抽成新空間了。這就是重構：當既有空間開始混亂，才把一群相關責任搬到新的模組。",
-    failureHint: "這次重點不是啞鈴能不能放客廳，而是健身相關物品變多後，是否值得集中到新空間。",
+    failureHint: "這次重點不是啞鈴能不能放客廳，而是健身相關物品變多後，需要集中到專屬新空間。",
     zones: [
       { id: "living", name: "客廳", hint: "回到休息與招待" },
       { id: "bedroom", name: "臥室", hint: "睡眠與個人物品" },
@@ -131,9 +134,10 @@ const levels = [
     type: "互動關卡",
     title: "AI 把所有功能都塞進 main 了，怎麼分回模組？",
     mode: "sort",
-    sourceTitle: "main 裡的功能卡",
+    sourceTitle: "main 裡的function",
     zoneTitle: "已建立模組",
-    prompt: "先看功能卡的大字中文：它主要在處理哪一種資料？把它拖到最符合責任的模組。英文小字只是程式裡可能出現的 function 名稱。",
+    context: "你要做一個健康管理 App。<strong>AI 把所有功能都塞進 main</strong>，現在裡面有無敵長的程式碼，什麼都做。",
+    goal: "看每張卡的大字中文判斷它在處理哪種資料，拖到最符合責任的模組。英文小字只是 function 名。",
     success: "現在 main 變小了：它只需要協調流程，細節交給各模組處理。",
     failureHint: "先看中文大字：它主要在處理個人目標設定、飲食紀錄、熱量，還是報告？",
     zones: [
@@ -144,19 +148,20 @@ const levels = [
     ],
     items: [
       { id: "setGoal", label: "設定每日目標", detail: "setDailyGoal()", target: "goalSetting" },
-      { id: "addMeal", label: "新增一餐記錄", detail: "addMeal()", target: "foodLog" },
+      { id: "addMeal", label: "新增飲食記錄", detail: "addMeal()", target: "foodLog" },
       { id: "calcCalories", label: "計算這餐熱量", detail: "calculateMealCalories()", target: "calorie" },
       { id: "weekly", label: "產生每週報告", detail: "buildWeeklyReport()", target: "report" }
     ]
   },
   {
     type: "互動關卡",
-    title: "AI 又把晚餐提醒塞進 foodLog，這次該攔下來嗎？",
+    title: "使用者又提出新需求了，該歸類到哪裡？",
     mode: "sort",
     cumulativeFrom: 7,
     sourceTitle: "新增功能卡",
     zoneTitle: "現有模組",
-    prompt: "延續上一關，main 已經變薄了。現在只新增一個「提醒今天記得記錄晚餐」的小功能。它不是在新增記錄，而是在提醒使用者去記錄；但因為目前只有一個提醒，先放在飲食紀錄旁邊是合理的，不需要急著拆新模組。",
+    context: "main 已經變乾淨了！<strong>使用者又想加一個「提醒今天記得記錄晚餐」的小功能</strong>。這個功能應該要放到哪個模組裡面呢？",
+    goal: "把這張新卡放到最接近它最主要職責的模組。",
     success: "這是合理的暫放：這張卡有「記錄」的意思，先放在飲食紀錄可以。但它真正做的事是提醒使用者，等提醒功能變多時，再考慮拆出提醒通知。",
     failureHint: "這張卡有「記錄」的意思，但目前只有一個提醒功能。先找最接近的既有模組。",
     zones: [
@@ -166,7 +171,7 @@ const levels = [
       { id: "report", name: "成果報告", hint: "report" }
     ],
     newItems: [
-      { id: "dinnerReminder", label: "提醒今天記得記錄晚餐", detail: "remindDinnerLog()", target: "foodLog" }
+      { id: "dinnerReminder", label: "飲食記錄提醒", detail: "remindDinnerLog()", target: "foodLog" }
     ]
   },
   {
@@ -176,7 +181,8 @@ const levels = [
     cumulativeFrom: 8,
     sourceTitle: "又新增的提醒",
     zoneTitle: "重新規劃模組",
-    prompt: "延續上一關，一個晚餐記錄提醒先放在飲食紀錄還可以；但現在提醒功能變多了，飲食紀錄開始同時負責「保存吃了什麼」和「叫使用者去做事」。請新增提醒通知，把提醒類功能集中過去。",
+    context: "上一關晚餐提醒先放飲食紀錄還可以，但<strong>提醒功能變多了，飲食紀錄開始同時做「保存吃了什麼」和「叫使用者去做事」兩件事</strong>。",
+    goal: "新增「提醒通知」模組，把所有提醒類功能集中過去。",
     success: "現在更清楚了：飲食紀錄負責保存吃了什麼，提醒通知負責叫使用者去做事。一開始只有一個提醒，暫放在飲食紀錄可以；但提醒變多後，就值得拆成自己的模組。",
     failureHint: "現在提醒功能變多了。想想哪些卡是在保存資料，哪些卡是在叫使用者去做事。",
     zones: [
@@ -224,7 +230,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "餐廳動作",
     zoneTitle: "對訂位資料做什麼",
-    prompt: "客人原本訂位 6 人，後來改成 8 人，現場最後來 7 人。餐廳決定：訂位資料是唯一真相來源。收到新資訊的人要更新訂位資料；需要使用資料的人要讀取訂位資料。",
+    context: "客人原本訂位 6 人，後來改成 8 人，現場最後來 7 人。<strong>餐廳決定訂位資料是唯一真相來源</strong>。",
+    goal: "收到新資訊 → 更新訂位資料；要安排工作 → 讀取訂位資料。",
     success: "這就是 SSOT：新資訊先更新到訂位資料；其他工作統一讀訂位資料。不要讓老闆、廚房、座位安排各自保存一份人數。",
     failureHint: "先判斷這張卡是在收到新資訊，還是在使用既有資訊做事。收到新資訊要更新訂位資料；要安排工作時讀取訂位資料。",
     zones: [
@@ -244,7 +251,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "程式裡的動作",
     zoneTitle: "對 reservation 做什麼",
-    prompt: "回到簡單訂位系統。訂位資料 reservation 是 SSOT，裡面可以有 partySize 和 arrivedCount。收到新資訊時要更新 reservation；頁面需要資料時要讀取 reservation。",
+    context: "回到訂位系統。<strong>訂位資料 reservation 是 SSOT</strong>，裡面可放 partySize 與 arrivedCount。",
+    goal: "收到新資訊 → 更新 reservation；頁面要資料 → 讀取 reservation。",
     success: "現在比較清楚了：updatePartySize 和 updateArrivedCount 會更新 SSOT；座位頁和廚房頁只需要讀 reservation，不要自己保存一份人數。",
     failureHint: "看到 update 通常是在把新資訊寫回 SSOT；看到 reads 通常是在使用 SSOT，不應該自己另存一份。",
     zones: [
@@ -274,7 +282,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "折扣規則",
     zoneTitle: "整理方式",
-    prompt: "店裡有會員折扣、生日折扣和滿額免運。不要讓每位店員各自背一套規則，否則規則改了很容易有人還用舊版。請把共同規則和使用規則的人分開。",
+    context: "店裡有會員折扣、生日折扣和滿額免運。<strong>不要讓每位店員各自背一套</strong>，否則規則一改就會有人還用舊版。",
+    goal: "把共用規則和使用規則的人分開。",
     success: "DRY 的重點是：折扣規則只維護一次。店員可以使用這套規則，但不要每個人各自抄一份。",
     failureHint: "想想如果生日折扣改了，哪種做法只要改一張規則表？哪種做法要提醒每位店員改自己的版本？",
     zones: [
@@ -296,7 +305,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "Email 檢查功能",
     zoneTitle: "DRY 整理",
-    prompt: "App 有註冊、登入、個人資料三個地方都需要檢查 Email。請把共同規則集中，讓各頁面使用同一個檢查工具。",
+    context: "App 有<strong>註冊、登入、個人資料三個地方都要檢查 Email</strong>，規則一樣。",
+    goal: "把共用規則集中，讓各頁面使用同一個檢查工具。",
     success: "這就是 DRY：Email 格式規則只寫一次。註冊、登入、個人資料頁都使用同一個工具，而不是各自複製一份。",
     failureHint: "如果 Email 規則改了，你希望只改一個共用工具，還是改三個頁面裡各自複製的規則？",
     zones: [
@@ -329,7 +339,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "點名工具功能",
     zoneTitle: "現在要不要做",
-    prompt: "需求只是：每天記錄誰到了。請把現在真的需要的功能，和可以等需求變明確後再做的功能分開。",
+    context: "老師的需求只是<strong>每天記錄班上誰到了、誰沒到</strong>。",
+    goal: "把現在真的需要的功能，和等需求變明確後再做的功能分開。",
     success: "這就是 KISS：先做學生名單、日期、到或未到。QR code、家長通知、統計報表都可能有用，但不是第一版一定要有。",
     failureHint: "先盯住第一版需求：每天記錄誰到了。會讓第一版變很大、但還不是必要的功能，先不要加。",
     zones: [
@@ -351,7 +362,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "AI 提出的登入設計",
     zoneTitle: "KISS 判斷",
-    prompt: "需求只是：做一個簡單登入畫面。請把第一版需要的東西和過度設計分開。",
+    context: "你只是要<strong>一個簡單登入畫面</strong>，AI 卻丟出 service / factory / strategy 一整套架構。",
+    goal: "把第一版需要的東西和過度設計分開。",
     success: "簡單登入第一版需要欄位、按鈕和錯誤訊息。複雜權限、策略管理器和 plugin 系統可能是大型產品才需要的東西。",
     failureHint: "想想學生或下一位維護者能不能快速看懂。看起來很專業但目前用不到的架構，會讓小工具變難改。",
     zones: [
@@ -384,7 +396,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "可能的改動",
     zoneTitle: "改動範圍",
-    prompt: "需求只有一個：雞腿飯從 120 元改成 130 元。請選出真正必要的改動，並把過度改動放到不要動。",
+    context: "需求只有一個：<strong>雞腿飯從 120 元改成 130 元</strong>。",
+    goal: "選出真正必要的改動；和需求無關的改動放到「不要動」。",
     success: "最小改動不是偷懶，而是降低風險。需求只改價格，就不要順手改菜單結構、海報設計或收銀流程。",
     failureHint: "先盯住需求：只改雞腿飯價格。任何和價格無關、可能造成新 bug 的改動，都應該先不要動。",
     zones: [
@@ -405,7 +418,8 @@ const levels = [
     mode: "sort",
     sourceTitle: "AI 想改的地方",
     zoneTitle: "是否該改",
-    prompt: "需求是：把提醒時間從晚上 8 點改成晚上 9 點。請把必要改動和過度改動分開。",
+    context: "需求是<strong>把提醒時間從晚上 8 點改成晚上 9 點</strong>。",
+    goal: "把必要改動和過度改動分開，避免請 AI 順手重構無關檔案。",
     success: "這就是和 AI 協作時的最小改動：只改提醒時間設定，驗證提醒仍會出現，不要順手重寫整個通知模組。",
     failureHint: "需求只有提醒時間。凡是改資料模型、重寫 UI、搬模組，通常都不是這次必要改動。",
     zones: [
@@ -436,7 +450,9 @@ const nodes = {
   levelTitle: document.querySelector("#levelTitle"),
   progressText: document.querySelector("#progressText"),
   progressBar: document.querySelector("#progressBar"),
-  taskText: document.querySelector("#taskText"),
+  taskContext: document.querySelector("#taskContext"),
+  taskContextRow: document.querySelector("#taskContextRow"),
+  taskGoal: document.querySelector("#taskGoal"),
   explainPanel: document.querySelector("#explainPanel"),
   explainBody: document.querySelector("#explainBody"),
   explainTitle: document.querySelector("#explainTitle"),
@@ -483,7 +499,16 @@ function renderLevel() {
   nodes.levelTitle.textContent = level.title;
   nodes.progressText.textContent = `${currentLevel + 1} / ${levels.length}`;
   nodes.progressBar.style.width = `${((currentLevel + 1) / levels.length) * 100}%`;
-  nodes.taskText.textContent = `${isDevMode ? "[測試模式] " : ""}${level.prompt || "閱讀說明後進入下一關。"}`;
+  const devPrefix = isDevMode ? "[測試模式] " : "";
+  if (level.context) {
+    nodes.taskContextRow.hidden = false;
+    nodes.taskContext.innerHTML = `${devPrefix}${level.context}`;
+    nodes.taskGoal.innerHTML = level.goal || "";
+  } else {
+    nodes.taskContextRow.hidden = true;
+    nodes.taskContext.innerHTML = "";
+    nodes.taskGoal.innerHTML = `${devPrefix}${level.goal || "閱讀說明後進入下一關。"}`;
+  }
   hideTaskHint();
   updateMainButton(level);
 
@@ -551,6 +576,13 @@ function showFailureHint(message) {
   nodes.taskActionBar.classList.remove("done");
 }
 
+function showSuccessMessage(message) {
+  nodes.taskHint.textContent = message;
+  nodes.taskHint.hidden = false;
+  nodes.taskActionBar.classList.add("done");
+  nodes.taskActionBar.classList.remove("bad");
+}
+
 function hideTaskHint() {
   nodes.taskHint.hidden = true;
   nodes.taskHint.textContent = "";
@@ -558,10 +590,7 @@ function hideTaskHint() {
 }
 
 function showCompletionMessage() {
-  nodes.taskHint.textContent = "課程完成。";
-  nodes.taskHint.hidden = false;
-  nodes.taskActionBar.classList.add("done");
-  nodes.taskActionBar.classList.remove("bad");
+  showSuccessMessage("課程完成。");
   nodes.nextButton.disabled = true;
 }
 
@@ -807,13 +836,11 @@ function checkAnswers() {
       tile.draggable = false;
       tile.disabled = true;
     });
+    updateMainButton(level);
+    renderNav();
     if (currentLevel < levels.length - 1) {
-      saveCurrentGameState();
-      currentLevel += 1;
-      renderLevel();
+      showSuccessMessage(level.success);
     } else {
-      updateMainButton(level);
-      renderNav();
       showCompletionMessage();
     }
   } else {
