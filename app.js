@@ -161,7 +161,7 @@ const levels = [
     sourceTitle: "新增功能卡",
     zoneTitle: "現有模組",
     context: "main 已經變乾淨了！<strong>使用者又想加一個「提醒今天記得記錄晚餐」的小功能</strong>。這個功能應該要放到哪個模組裡面呢？",
-    goal: "把這張新卡放到最接近它最主要職責的模組。",
+    goal: "把這張新卡放到最接近它目前最主要職責的模組。",
     success: "這是合理的暫放：這張卡有「記錄」的意思，先放在飲食紀錄可以。但它真正做的事是提醒使用者，等提醒功能變多時，再考慮拆出提醒通知。",
     failureHint: "這張卡有「記錄」的意思，但目前只有一個提醒功能。先找最接近的既有模組。",
     zones: [
@@ -176,7 +176,7 @@ const levels = [
   },
   {
     type: "互動關卡",
-    title: "AI 一路把提醒都塞進飲食紀錄，是時候拆出來了",
+    title: "提醒功能變多了，是時候拆出來了",
     mode: "sort",
     cumulativeFrom: 8,
     sourceTitle: "又新增的提醒",
@@ -447,6 +447,64 @@ const gameStates = {};
 const completedLevels = new Set();
 const params = new URLSearchParams(window.location.search);
 const isDevMode = params.get("dev") === "1";
+const STORAGE_KEY = "tinyQuestsCodex.v1";
+
+function saveState() {
+  try {
+    const data = {
+      currentLevel,
+      chapterProgress,
+      completedLevels: [...completedLevels],
+      gameStates,
+      expandedChapters: [...expandedChapters]
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    /* localStorage 不可用時，沉默退化為純記憶體狀態 */
+  }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (typeof data.currentLevel === "number" && data.currentLevel >= 0 && data.currentLevel < levels.length) {
+      currentLevel = data.currentLevel;
+    }
+    if (Array.isArray(data.chapterProgress) && data.chapterProgress.length === chapterProgress.length) {
+      data.chapterProgress.forEach((v, i) => {
+        if (typeof v === "number") chapterProgress[i] = v;
+      });
+    }
+    if (Array.isArray(data.completedLevels)) {
+      data.completedLevels.forEach((i) => {
+        if (typeof i === "number") completedLevels.add(i);
+      });
+    }
+    if (data.gameStates && typeof data.gameStates === "object") {
+      Object.assign(gameStates, data.gameStates);
+    }
+    if (Array.isArray(data.expandedChapters)) {
+      expandedChapters.clear();
+      data.expandedChapters.forEach((i) => {
+        if (typeof i === "number") expandedChapters.add(i);
+      });
+    }
+  } catch (e) {
+    /* 資料壞掉就忽略，回到預設 */
+  }
+}
+
+function resetAll() {
+  if (!window.confirm("整個重來會清掉所有章節進度與作答狀態。確定？")) return;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {
+    /* ignore */
+  }
+  window.location.reload();
+}
 
 const nodes = {
   levelList: document.querySelector("#levelList"),
@@ -539,6 +597,7 @@ function renderNav() {
       } else {
         expandedChapters.add(ci);
       }
+      saveState();
       renderNav();
     });
     chapterLi.append(toggle);
@@ -617,6 +676,7 @@ function renderLevel() {
 
   renderNav();
   syncDevUrl();
+  saveState();
 }
 
 function updateMainButton(level) {
@@ -791,6 +851,7 @@ function saveCurrentGameState() {
     placements[tile.dataset.item] = zone ? zone.dataset.zone : "source";
   });
   gameStates[currentLevel] = placements;
+  saveState();
 }
 
 function invalidateDownstreamFrom(ancestor) {
@@ -949,20 +1010,10 @@ function isInteractiveLevel(level) {
   return level && level.mode === "sort";
 }
 
-function resetLevel() {
-  const ci = getChapterIndexOfLevel(currentLevel);
-  const { end } = getChapterRange(ci);
-  for (let index = currentLevel; index <= end; index += 1) {
-    delete gameStates[index];
-    completedLevels.delete(index);
-  }
-  chapterProgress[ci] = Math.min(chapterProgress[ci], currentLevel);
-  renderLevel();
-}
-
-nodes.resetButton.addEventListener("click", resetLevel);
+nodes.resetButton.addEventListener("click", resetAll);
 nodes.nextButton.addEventListener("click", handleMainAction);
 
+loadState();
 applyDevMode();
 expandedChapters.add(getChapterIndexOfLevel(currentLevel));
 renderLevel();
