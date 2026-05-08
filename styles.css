@@ -97,8 +97,9 @@ button {
 }
 
 .level-list {
-  display: grid;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   align-content: start;
   overflow: auto;
   margin: 0;
@@ -106,15 +107,85 @@ button {
   list-style: none;
 }
 
+.chapter {
+  list-style: none;
+}
+
+.chapter-toggle {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chapter-toggle:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.chapter-chevron {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.chapter-name {
+  letter-spacing: 0.02em;
+}
+
+.chapter-badge {
+  min-width: 22px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eceff3;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.chapter-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 2px 0 6px;
+  padding: 0 0 0 14px;
+  list-style: none;
+}
+
+.chapter-levels li {
+  list-style: none;
+}
+
 .level-button {
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--ink);
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
   background: #fff;
+  color: var(--ink);
   text-align: left;
+  font-size: 13px;
+  line-height: 1.45;
   cursor: pointer;
+}
+
+.level-button:hover:not(:disabled) {
+  background: #f4f6f9;
 }
 
 .level-button[aria-current="true"] {
@@ -122,15 +193,36 @@ button {
   background: #e8f0fe;
 }
 
-.level-button strong {
-  display: block;
-  margin-bottom: 3px;
-  font-size: 14px;
+.level-button:disabled {
+  cursor: not-allowed;
+  color: var(--muted);
 }
 
-.level-button span {
+.level-type {
+  width: 8px;
+  height: 8px;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: #c4d4f0;
+}
+
+.level-button.is-sort .level-type {
+  background: #f0a86b;
+}
+
+.level-button:disabled .level-type {
+  background: #d8dadd;
+}
+
+.level-title {
+  min-width: 0;
+}
+
+.level-seq {
+  margin-top: 2px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
 }
 
 .nav-actions {

@@ -475,29 +475,96 @@ const nodes = {
   nextButton: document.querySelector("#nextButton")
 };
 
+const chapters = [
+  { name: "開場", startIndex: 0 },
+  { name: "1. SRP 單一職責", startIndex: 3 },
+  { name: "2. SSOT 唯一真相", startIndex: 11 },
+  { name: "3. DRY 不要重複", startIndex: 14 },
+  { name: "4. KISS 保持簡單", startIndex: 17 },
+  { name: "5. 最小改動", startIndex: 20 }
+];
+
+const expandedChapters = new Set();
+
+function getChapterRange(chapterIndex) {
+  const start = chapters[chapterIndex].startIndex;
+  const next = chapters[chapterIndex + 1];
+  const end = next ? next.startIndex - 1 : levels.length - 1;
+  return { start, end };
+}
+
+function getChapterIndexOfLevel(levelIndex) {
+  for (let i = chapters.length - 1; i >= 0; i -= 1) {
+    if (chapters[i].startIndex <= levelIndex) return i;
+  }
+  return 0;
+}
+
 function renderNav() {
   nodes.levelList.innerHTML = "";
-  levels.forEach((level, index) => {
-    const item = document.createElement("li");
-    const button = document.createElement("button");
-    const isUnlocked = index <= unlockedLevel;
-    button.className = "level-button";
-    button.type = "button";
-    button.disabled = !isUnlocked;
-    button.setAttribute("aria-current", String(index === currentLevel));
-    button.innerHTML = `<strong>${index + 1}. ${level.title}</strong><span>${isUnlocked ? level.type : "尚未解鎖"}</span>`;
-    button.addEventListener("click", () => {
-      if (!isUnlocked) return;
-      saveCurrentGameState();
-      currentLevel = index;
-      renderLevel();
+
+  chapters.forEach((chapter, ci) => {
+    const { start, end } = getChapterRange(ci);
+    const isExpanded = expandedChapters.has(ci);
+
+    const chapterLi = document.createElement("li");
+    chapterLi.className = "chapter";
+
+    const toggle = document.createElement("button");
+    toggle.className = "chapter-toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", String(isExpanded));
+    toggle.innerHTML = `
+      <span class="chapter-chevron" aria-hidden="true">${isExpanded ? "▾" : "▸"}</span>
+      <span class="chapter-name">${chapter.name}</span>
+      <span class="chapter-badge">${end - start + 1}</span>
+    `;
+    toggle.addEventListener("click", () => {
+      if (isExpanded) {
+        expandedChapters.delete(ci);
+      } else {
+        expandedChapters.add(ci);
+      }
+      renderNav();
     });
-    item.append(button);
-    nodes.levelList.append(item);
+    chapterLi.append(toggle);
+
+    if (isExpanded) {
+      const levelsList = document.createElement("ol");
+      levelsList.className = "chapter-levels";
+      for (let i = start; i <= end; i += 1) {
+        const level = levels[i];
+        const item = document.createElement("li");
+        const button = document.createElement("button");
+        const isUnlocked = i <= unlockedLevel;
+        const isExplain = level.mode === "explain";
+        button.className = `level-button ${isExplain ? "is-explain" : "is-sort"}`;
+        button.type = "button";
+        button.disabled = !isUnlocked;
+        button.setAttribute("aria-current", String(i === currentLevel));
+        button.innerHTML = `
+          <span class="level-type" aria-hidden="true"></span>
+          <span class="level-title">${level.title}</span>
+          <span class="level-seq">${i + 1}</span>
+        `;
+        button.addEventListener("click", () => {
+          if (!isUnlocked) return;
+          saveCurrentGameState();
+          currentLevel = i;
+          renderLevel();
+        });
+        item.append(button);
+        levelsList.append(item);
+      }
+      chapterLi.append(levelsList);
+    }
+
+    nodes.levelList.append(chapterLi);
   });
 }
 
 function renderLevel() {
+  expandedChapters.add(getChapterIndexOfLevel(currentLevel));
   const level = levels[currentLevel];
   selectedTileId = null;
   nodes.levelType.textContent = level.type;
@@ -537,6 +604,7 @@ function renderLevel() {
   }
 
   renderNav();
+  syncDevUrl();
 }
 
 function updateMainButton(level) {
@@ -597,6 +665,13 @@ function hideTaskHint() {
 function showCompletionMessage() {
   showSuccessMessage("課程完成。");
   nodes.nextButton.disabled = true;
+}
+
+function syncDevUrl() {
+  if (!isDevMode) return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("level", String(currentLevel + 1));
+  history.replaceState(null, "", url.toString());
 }
 
 function applyDevMode() {
