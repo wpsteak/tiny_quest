@@ -442,7 +442,6 @@ const levels = [
 ];
 
 let currentLevel = 0;
-let unlockedLevel = 0;
 let selectedTileId = null;
 const gameStates = {};
 const completedLevels = new Set();
@@ -477,13 +476,14 @@ const nodes = {
 
 const chapters = [
   { name: "開場", startIndex: 0 },
-  { name: "1. SRP 單一職責", startIndex: 3 },
+  { name: "1. SRP 單一職責", startIndex: 2 },
   { name: "2. SSOT 唯一真相", startIndex: 11 },
   { name: "3. DRY 不要重複", startIndex: 14 },
   { name: "4. KISS 保持簡單", startIndex: 17 },
   { name: "5. 最小改動", startIndex: 20 }
 ];
 
+const chapterProgress = chapters.map((chapter) => chapter.startIndex);
 const expandedChapters = new Set();
 
 function getChapterRange(chapterIndex) {
@@ -498,6 +498,18 @@ function getChapterIndexOfLevel(levelIndex) {
     if (chapters[i].startIndex <= levelIndex) return i;
   }
   return 0;
+}
+
+function isLevelUnlocked(levelIndex) {
+  const ci = getChapterIndexOfLevel(levelIndex);
+  return levelIndex <= chapterProgress[ci];
+}
+
+function advanceChapterProgress(levelIndex) {
+  const ci = getChapterIndexOfLevel(levelIndex);
+  if (levelIndex > chapterProgress[ci]) {
+    chapterProgress[ci] = levelIndex;
+  }
 }
 
 function renderNav() {
@@ -538,7 +550,7 @@ function renderNav() {
         const level = levels[i];
         const item = document.createElement("li");
         const button = document.createElement("button");
-        const isUnlocked = i <= unlockedLevel;
+        const isUnlocked = isLevelUnlocked(i);
         const isExplain = level.mode === "explain";
         button.className = `level-button ${isExplain ? "is-explain" : "is-sort"}`;
         button.type = "button";
@@ -632,10 +644,10 @@ function handleMainAction() {
 function advanceLevel() {
   const level = levels[currentLevel];
   if (level.mode === "explain") {
-    unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
+    advanceChapterProgress(currentLevel + 1);
   }
   if (currentLevel < levels.length - 1) {
-    if (currentLevel + 1 > unlockedLevel) return;
+    if (!isLevelUnlocked(currentLevel + 1)) return;
     saveCurrentGameState();
     currentLevel += 1;
     renderLevel();
@@ -677,7 +689,10 @@ function syncDevUrl() {
 function applyDevMode() {
   if (!isDevMode) return;
 
-  unlockedLevel = levels.length - 1;
+  chapters.forEach((_, ci) => {
+    const { end } = getChapterRange(ci);
+    chapterProgress[ci] = end;
+  });
   const requestedLevel = Number(params.get("level"));
   if (Number.isInteger(requestedLevel) && requestedLevel >= 1 && requestedLevel <= levels.length) {
     currentLevel = requestedLevel - 1;
@@ -911,7 +926,9 @@ function checkAnswers() {
 
   if (wrongCount === 0 && placedCount === items.length) {
     completedLevels.add(currentLevel);
-    unlockedLevel = Math.max(unlockedLevel, currentLevel + 1);
+    if (currentLevel < levels.length - 1) {
+      advanceChapterProgress(currentLevel + 1);
+    }
     document.querySelectorAll(".tile").forEach((tile) => {
       tile.draggable = false;
       tile.disabled = true;
@@ -933,11 +950,13 @@ function isInteractiveLevel(level) {
 }
 
 function resetLevel() {
-  for (let index = currentLevel; index < levels.length; index += 1) {
+  const ci = getChapterIndexOfLevel(currentLevel);
+  const { end } = getChapterRange(ci);
+  for (let index = currentLevel; index <= end; index += 1) {
     delete gameStates[index];
     completedLevels.delete(index);
   }
-  unlockedLevel = Math.min(unlockedLevel, currentLevel);
+  chapterProgress[ci] = Math.min(chapterProgress[ci], currentLevel);
   renderLevel();
 }
 
