@@ -598,6 +598,8 @@ body:not(.mode-explain) .stage-footer {
 }
 
 .sink-items {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   min-height: 0;
   overflow: auto;
   padding: 14px;
@@ -614,6 +616,19 @@ body:not(.mode-explain) .stage-footer {
 .module-workspace.has-sink-row {
   grid-template-rows: minmax(0, 1fr) minmax(108px, auto);
   gap: 14px;
+}
+
+.sink-foot {
+  display: flex;
+  justify-content: flex-end;
+  align-items: end;
+  margin-top: 10px;
+}
+
+.sink-count {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
 }
 
 .drop-zones {

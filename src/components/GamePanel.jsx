@@ -134,7 +134,7 @@ export default function GamePanel({
             >
               <div className="zone-name">
                 <span>{level.sink.title}: {level.sink.name}</span>
-                <span className="zone-hint">{sinkItems.length} / {sinkTotal}</span>
+                <span className="zone-hint">{level.sink.hint}</span>
               </div>
               <div className="drop-zone-items">
                 {sinkItems.map((item) => (
@@ -146,6 +146,9 @@ export default function GamePanel({
                     onSelect={selectHandler(item.id)}
                   />
                 ))}
+              </div>
+              <div className="sink-foot">
+                <span className="sink-count">{sinkItems.length} / {sinkTotal}</span>
               </div>
             </div>
           )}
