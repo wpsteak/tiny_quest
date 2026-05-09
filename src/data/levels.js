@@ -255,14 +255,14 @@ export const levels = [
     zoneTitle: "餐廳分工",
     sink: {
       id: "duplicateCopies",
-      title: "待移除",
+      title: "待整併",
       name: "散落的人數副本",
       hint: "不該留在各組"
     },
     context: "餐廳太忙，AI 像臨時幫手一樣，讓每個區域先記一份人數：<strong>王小姐現場填單預約 6 人，後來又打電話改成 8 人</strong>，結果資訊散在不同地方。",
-    goal: "建立正式訂位資料，並把各組自己記下的人數版本移到待移除區。",
+    goal: "建立正式訂位資料，並把各組自己記下的人數版本移到待整併區。",
     success: "你建立了唯一資料來源，也抓出了散落的人數副本。下一步才是判斷哪些動作要更新它、哪些動作要讀取它。",
-    failureHint: "正式訂位資料應該放進餐廳分工裡；各組自己記下的人數版本應該移到待移除區。",
+    failureHint: "正式訂位資料應該放進餐廳分工裡；各組自己記下的人數版本應該移到待整併區。",
     zones: [
       { id: "frontDeskTeam", name: "櫃台組", hint: "接待、現場協調" },
       { id: "phoneTeam", name: "電話組", hint: "接聽來電" },
@@ -303,27 +303,6 @@ export const levels = [
       { id: "phoneWriteReservationData", label: "電話改人數時，寫入正式訂位資料", detail: "電話組的流程", target: "phoneTeam" },
       { id: "frontDeskWriteReservationData", label: "現場報到時，寫入正式訂位資料", detail: "櫃台組的流程", target: "frontDeskTeam" },
       { id: "kitchenReadReservationData", label: "準備餐點時，讀取正式訂位資料", detail: "廚房組的流程", target: "kitchenTeam" }
-    ]
-  },
-  {
-    type: "互動關卡",
-    title: "AI 讓每個頁面各自存了一份 partySize，怎麼收回來？",
-    mode: "sort",
-    sourceTitle: "程式裡的動作",
-    zoneTitle: "對 reservation 做什麼",
-    context: "回到訂位系統。<strong>訂位資料 reservation 是 SSOT</strong>，裡面可放 partySize 與 arrivedCount。",
-    goal: "收到新資訊 → 更新 reservation；頁面要資料 → 讀取 reservation。",
-    success: "現在比較清楚了：updatePartySize 和 updateArrivedCount 會更新 SSOT；座位頁和廚房頁只需要讀 reservation，不要自己保存一份人數。",
-    failureHint: "看到 update 通常是在把新資訊寫回 SSOT；看到 reads 通常是在使用 SSOT，不應該自己另存一份。",
-    zones: [
-      { id: "update", name: "更新 reservation", hint: "把新資訊寫回 SSOT" },
-      { id: "read", name: "讀取 reservation", hint: "從 SSOT 取得資訊" }
-    ],
-    items: [
-      { id: "updatePartySize", label: "updatePartySize(8)", detail: "客人改訂位人數", target: "update" },
-      { id: "updateArrived", label: "updateArrivedCount(7)", detail: "現場到場人數", target: "update" },
-      { id: "seatPageRead", label: "SeatPage reads reservation", detail: "安排座位時讀資料", target: "read" },
-      { id: "kitchenRead", label: "KitchenPage reads reservation", detail: "準備份量時讀資料", target: "read" }
     ]
   },
   {
