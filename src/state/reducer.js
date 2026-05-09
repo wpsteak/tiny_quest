@@ -28,7 +28,7 @@ export function getInitialPlacements(level, gameStates) {
     }, {});
   }
   return items.reduce((placements, item) => {
-    placements[item.id] = "source";
+    placements[item.id] = level.initialPlacements?.[item.id] || "source";
     return placements;
   }, {});
 }

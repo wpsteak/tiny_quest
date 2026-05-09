@@ -13,6 +13,12 @@ Check these files when the level order changes:
   a chained sort level.
 - `src/state/storage.js`: bump `STORAGE_KEY` when level order changes.
 
+Some sort levels do not start from a source pile. Use `initialPlacements` to
+place cards directly into zones at the start, and `hideSource: true` when the
+task should be about reorganizing an existing structure instead of sorting loose
+cards. Use `sink` when the level needs a right-side collection area at the same
+layout level as the source pile, rather than another module zone.
+
 `cumulativeFrom` means a sort level starts from a previous sort level's state.
 If the referenced index is wrong, later levels can inherit the wrong items or
 placements.

@@ -249,6 +249,38 @@ export const levels = [
   },
   {
     type: "互動關卡",
+    title: "AI 讓每個區域各自記了一個人數版本，現在該收去哪？",
+    mode: "sort",
+    hideSource: true,
+    zoneTitle: "散落的人數紀錄",
+    sink: {
+      id: "merge",
+      title: "整併區",
+      name: "重複資料待整併",
+      hint: "同一件事先收在一起"
+    },
+    context: "餐廳太忙，AI 像臨時幫手一樣，讓每個區域先記一份人數：<strong>原訂 6 人、電話改 8 人、現場到 7 人</strong>，結果資訊散在不同地方。",
+    goal: "辨識出這些都是同一筆訂位人數的版本，把它們拖到右側整併區。",
+    success: "你抓出了重複的人數版本。下一步才是決定新資訊如何更新正式訂位資料，以及其他區域如何讀取它。",
+    failureHint: "找出每個區域裡那張自己記下的人數版本。人數變化應該集中到正式訂位紀錄，不要散在各區域。",
+    zones: [
+      { id: "phone", name: "電話紀錄", hint: "只記來電處理" },
+      { id: "frontDesk", name: "櫃台報到紀錄", hint: "只記報到狀態" },
+      { id: "kitchen", name: "廚房備餐紀錄", hint: "只記備餐量" }
+    ],
+    items: [
+      { id: "phonePartySize", label: "王小姐原訂 6 人", detail: "電話中記下的人數版本", target: "merge" },
+      { id: "kitchenPartySize", label: "王小姐電話改成 8 人", detail: "老闆自己記下的人數版本", target: "merge" },
+      { id: "frontDeskPartySize", label: "王小姐現場到 7 人", detail: "櫃台記下的人數版本", target: "merge" }
+    ],
+    initialPlacements: {
+      phonePartySize: "phone",
+      kitchenPartySize: "kitchen",
+      frontDeskPartySize: "frontDesk"
+    }
+  },
+  {
+    type: "互動關卡",
     title: "客人一直改人數，餐廳要怎麼讓大家不混亂？",
     mode: "sort",
     sourceTitle: "餐廳動作",

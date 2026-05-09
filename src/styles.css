@@ -551,8 +551,17 @@ body:not(.mode-explain) .stage-footer {
   overflow: hidden;
 }
 
+.game-panel.no-source {
+  grid-template-columns: 1fr;
+}
+
+.game-panel.no-source.has-sink {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+}
+
 .items-column,
-.zones-column {
+.zones-column,
+.sink-column {
   display: grid;
   grid-template-rows: auto 1fr;
   min-height: 0;
@@ -589,6 +598,16 @@ body:not(.mode-explain) .stage-footer {
   overflow: auto;
   padding: 14px;
   border: 1px dashed #a9b4c3;
+  border-radius: 8px;
+  background: #f8fbff;
+}
+
+.sink-items {
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  padding: 14px;
+  border: 1px dashed rgba(25, 103, 210, 0.55);
   border-radius: 8px;
   background: #f8fbff;
 }
