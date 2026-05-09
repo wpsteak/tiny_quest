@@ -119,42 +119,38 @@ export default function GamePanel({
         <div className="panel-heading">
           <h3>{level.zoneTitle || "目標空間"}</h3>
         </div>
-        <div className="drop-zones">
-          {level.zones.map(renderZone)}
+        <div className={`module-workspace ${hasSink ? "has-sink-row" : ""}`.trim()}>
+          <div className="drop-zones">
+            {level.zones.map(renderZone)}
+          </div>
+          {hasSink && (
+            <div
+              className="sink-items"
+              aria-label={level.sink.title}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, sinkId)}
+              onClick={() => handleZoneClick(sinkId)}
+            >
+              <div className="zone-name">
+                <span>{level.sink.title}: {level.sink.name}</span>
+                <span className="zone-hint">{sinkItems.length} / {sinkTotal}</span>
+              </div>
+              <div className="drop-zone-items">
+                {sinkItems.map((item) => (
+                  <Tile
+                    key={item.id}
+                    item={item}
+                    extraClass={tileClassFor(item.id)}
+                    draggable={!isLocked}
+                    onSelect={selectHandler(item.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      {hasSink && (
-        <div className="sink-column">
-          <div className="panel-heading">
-            <h3>{level.sink.title}</h3>
-            <span className="counter">{sinkItems.length} / {sinkTotal}</span>
-          </div>
-          <div
-            className="sink-items"
-            aria-label={level.sink.title}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDrop(e, sinkId)}
-            onClick={() => handleZoneClick(sinkId)}
-          >
-            <div className="zone-name">
-              <span>{level.sink.name}</span>
-              <span className="zone-hint">{level.sink.hint}</span>
-            </div>
-            <div className="drop-zone-items">
-              {sinkItems.map((item) => (
-                <Tile
-                  key={item.id}
-                  item={item}
-                  extraClass={tileClassFor(item.id)}
-                  draggable={!isLocked}
-                  onSelect={selectHandler(item.id)}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </article>
   );
 }
