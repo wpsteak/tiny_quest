@@ -85,6 +85,10 @@ function feedbackForLevel(currentLevel, completedLevels) {
   return { kind: "idle", message: "", tileResults: {} };
 }
 
+function expandedForLevel(levelIndex) {
+  return [getChapterIndexOfLevel(levelIndex)];
+}
+
 export function createInitialState({ devMode = false, requestedLevel = null } = {}) {
   let chapterProgress = chapters.map((chapter) => chapter.startIndex);
   if (devMode) {
@@ -96,7 +100,6 @@ export function createInitialState({ devMode = false, requestedLevel = null } = 
     currentLevel = requestedLevel;
   }
 
-  const expanded = new Set([getChapterIndexOfLevel(currentLevel)]);
   const gameStates = ensureGameState({}, currentLevel);
 
   return {
@@ -104,7 +107,7 @@ export function createInitialState({ devMode = false, requestedLevel = null } = 
     gameStates,
     completedLevels: [],
     chapterProgress,
-    expandedChapters: [...expanded].sort((a, b) => a - b),
+    expandedChapters: expandedForLevel(currentLevel),
     selectedTileId: null,
     feedback: feedbackForLevel(currentLevel, [])
   };
@@ -129,12 +132,8 @@ export function hydrateState(initialState, snapshot) {
   if (snapshot.gameStates && typeof snapshot.gameStates === "object") {
     next.gameStates = { ...snapshot.gameStates };
   }
-  if (Array.isArray(snapshot.expandedChapters)) {
-    next.expandedChapters = snapshot.expandedChapters.filter(
-      (i) => typeof i === "number" && i >= 0 && i < chapters.length
-    );
-  }
   next.gameStates = ensureGameState(next.gameStates, next.currentLevel);
+  next.expandedChapters = expandedForLevel(next.currentLevel);
   next.feedback = feedbackForLevel(next.currentLevel, next.completedLevels);
   return next;
 }
@@ -159,6 +158,7 @@ export function reducer(state, action) {
         ...state,
         currentLevel: levelIndex,
         gameStates,
+        expandedChapters: expandedForLevel(levelIndex),
         selectedTileId: null,
         feedback: feedbackForLevel(levelIndex, state.completedLevels)
       };
@@ -231,6 +231,7 @@ export function reducer(state, action) {
           ...state,
           completedLevels: newCompleted,
           chapterProgress: newProgress,
+          expandedChapters: isLast ? state.expandedChapters : expandedForLevel(state.currentLevel + 1),
           feedback: {
             kind: isLast ? "completed" : "success",
             message: isLast ? "課程完成。" : level.success,
@@ -274,6 +275,7 @@ export function reducer(state, action) {
         chapterProgress: newProgress,
         currentLevel: nextIndex,
         gameStates,
+        expandedChapters: expandedForLevel(nextIndex),
         selectedTileId: null,
         feedback: feedbackForLevel(nextIndex, state.completedLevels)
       };
