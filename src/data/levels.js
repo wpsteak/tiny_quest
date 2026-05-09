@@ -224,14 +224,16 @@ export const levels = [
     mode: "explain",
     html: `
       <p><strong>SSOT</strong> 是 Single Source of Truth，意思是「同一件事只認一個真相來源」。</p>
+
       <p>AI coding 常常是「局部解題」：</p>
-      <ul>
+      <ul class="tight">
         <li>你叫它改首頁，它就看首頁；你叫它改統計，它就看統計。</li>
-        <li>當不同地方都需要同一份資料時，AI 可能會各放一份，讓每個地方先跑起來</li>
+        <li>當不同地方都需要同一份資料時，AI 可能會各放一份，讓每個地方先跑起來。</li>
       </ul>
-      <p>長期來看，會越來越難維護。</p>
-      <p><strong>你以為 AI 改好了，結果只是眼前那頁改了；換個頁面一用，舊邏輯全部冒出來。</strong></p>
-      <p>SSOT 就是在確保：相同的資訊或邏輯只會出現在一個地方，而不是散落、重複在各地。</p>
+
+      <p>長期來看，會越來越難維護</p>
+      <p class="tight lede"><strong>你以為 AI 改好了，結果只是眼前那頁改了；<br/>換個頁面一用，舊邏輯全部冒出來。</strong></p>
+      <p class="tight">SSOT 是讓同一份資訊、狀態或核心規則只有一個可信來源，避免各處各自維護而產生不一致。</p>
     `
   },
   {
