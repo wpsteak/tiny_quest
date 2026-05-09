@@ -1,4 +1,4 @@
-const STORAGE_KEY = "tinyQuestsCodex.v3";
+const STORAGE_KEY = "tinyQuestsCodex.v4";
 
 export function loadStoredState() {
   try {

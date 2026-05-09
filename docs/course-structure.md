@@ -21,7 +21,9 @@ layout level as the source pile, rather than another module zone.
 
 `cumulativeFrom` means a sort level starts from a previous sort level's state.
 If the referenced index is wrong, later levels can inherit the wrong items or
-placements.
+placements. Use `carryForward: "persistent"` with `cumulativeFrom` when only
+items marked `carryForward: true` should continue, such as keeping an
+established SSOT card while dropping cards moved to a sink area.
 
 Current chained levels:
 
@@ -29,6 +31,7 @@ Current chained levels:
 - Level index `5` depends on `4`.
 - Level index `8` depends on `7`.
 - Level index `9` depends on `8`.
+- Level index `14` depends on `13`.
 
 Stored progress is also index-based. If existing users have localStorage from an
 older course order, their saved `currentLevel`, `chapterProgress`,

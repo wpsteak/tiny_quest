@@ -3,8 +3,12 @@ import { chapters, getChapterRange, getChapterIndexOfLevel } from "../data/chapt
 
 export function getLevelItems(level) {
   if (level.cumulativeFrom !== undefined) {
+    const previousItems = getLevelItems(levels[level.cumulativeFrom]);
+    const carriedItems = level.carryForward === "persistent"
+      ? previousItems.filter((item) => item.carryForward)
+      : previousItems;
     return [
-      ...getLevelItems(levels[level.cumulativeFrom]),
+      ...carriedItems,
       ...(level.newItems || [])
     ];
   }

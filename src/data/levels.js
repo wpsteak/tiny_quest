@@ -251,53 +251,58 @@ export const levels = [
     type: "互動關卡",
     title: "AI 讓每個區域各自記了一個人數版本，現在該收去哪？",
     mode: "sort",
-    hideSource: true,
-    zoneTitle: "散落的人數紀錄",
+    sourceTitle: "要建立的共用資料",
+    zoneTitle: "餐廳分工",
     sink: {
-      id: "merge",
-      title: "整併區",
-      name: "重複資料待整併",
-      hint: "同一件事先收在一起"
+      id: "duplicateCopies",
+      title: "待移除",
+      name: "散落的人數副本",
+      hint: "不該留在各組"
     },
-    context: "餐廳太忙，AI 像臨時幫手一樣，讓每個區域先記一份人數：<strong>原訂 6 人、電話改 8 人、現場到 7 人</strong>，結果資訊散在不同地方。",
-    goal: "辨識出這些都是同一筆訂位人數的版本，把它們拖到右側整併區。",
-    success: "你抓出了重複的人數版本。下一步才是決定新資訊如何更新正式訂位資料，以及其他區域如何讀取它。",
-    failureHint: "找出每個區域裡那張自己記下的人數版本。人數變化應該集中到正式訂位紀錄，不要散在各區域。",
+    context: "餐廳太忙，AI 像臨時幫手一樣，讓每個區域先記一份人數：<strong>王小姐現場填單預約 6 人，後來又打電話改成 8 人</strong>，結果資訊散在不同地方。",
+    goal: "建立正式訂位資料，並把各組自己記下的人數版本移到待移除區。",
+    success: "你建立了唯一資料來源，也抓出了散落的人數副本。下一步才是判斷哪些動作要更新它、哪些動作要讀取它。",
+    failureHint: "正式訂位資料應該放進餐廳分工裡；各組自己記下的人數版本應該移到待移除區。",
     zones: [
-      { id: "phone", name: "電話紀錄", hint: "只記來電處理" },
-      { id: "frontDesk", name: "櫃台報到紀錄", hint: "只記報到狀態" },
-      { id: "kitchen", name: "廚房備餐紀錄", hint: "只記備餐量" }
+      { id: "frontDeskTeam", name: "櫃台組", hint: "接待、現場協調" },
+      { id: "phoneTeam", name: "電話組", hint: "接聽來電" },
+      { id: "kitchenTeam", name: "廚房組", hint: "準備餐點" },
+      { id: "reservationData", name: "正式訂位資料", hint: "唯一人數來源" }
     ],
     items: [
-      { id: "phonePartySize", label: "王小姐原訂 6 人", detail: "電話中記下的人數版本", target: "merge" },
-      { id: "kitchenPartySize", label: "王小姐電話改成 8 人", detail: "老闆自己記下的人數版本", target: "merge" },
-      { id: "frontDeskPartySize", label: "王小姐現場到 7 人", detail: "櫃台記下的人數版本", target: "merge" }
+      { id: "reservationDataCard", label: "正式訂位資料", detail: "所有組都要認這一份", target: "reservationData", carryForward: true },
+      { id: "frontDeskTeamPartySize", label: "王小姐現場填單 6 人", detail: "櫃台組留下的原始預約版本", target: "duplicateCopies" },
+      { id: "phoneTeamPartySize", label: "王小姐電話改成 8 人", detail: "電話組接到來電後隨手抄下的人數版本", target: "duplicateCopies" },
+      { id: "kitchenTeamPartySize", label: "王小姐原訂 6 人", detail: "廚房組收到的舊人數版本", target: "duplicateCopies" }
     ],
     initialPlacements: {
-      phonePartySize: "phone",
-      kitchenPartySize: "kitchen",
-      frontDeskPartySize: "frontDesk"
+      frontDeskTeamPartySize: "frontDeskTeam",
+      phoneTeamPartySize: "phoneTeam",
+      kitchenTeamPartySize: "kitchenTeam"
     }
   },
   {
     type: "互動關卡",
-    title: "客人一直改人數，餐廳要怎麼讓大家不混亂？",
+    title: "有了正式訂位資料後，誰該更新，誰該讀取？",
     mode: "sort",
-    sourceTitle: "餐廳動作",
-    zoneTitle: "對訂位資料做什麼",
-    context: "客人原本訂位 6 人，後來改成 8 人，現場最後來 7 人。<strong>需要你幫餐廳決定訂位資料是唯一真相來源</strong>。",
-    goal: "收到新資訊 → 更新訂位資料；要安排工作時 → 讀取訂位資料。",
-    success: "這就是 SSOT：新資訊先更新到訂位資料；其他工作統一讀訂位資料。不要讓老闆、廚房、座位安排各自保存一份人數。",
-    failureHint: "先判斷這張卡是在收到新資訊，還是在使用既有資訊做事。收到新資訊要更新訂位資料；要安排工作時讀取訂位資料。",
+    cumulativeFrom: 13,
+    carryForward: "persistent",
+    sourceTitle: "資料使用方式",
+    zoneTitle: "餐廳分工",
+    context: "上一關你已經建立了<strong>正式訂位資料</strong>。現在各組做自己的工作時，不該再自己保存人數版本，而是要在自己的流程裡讀取或寫入正式訂位資料。",
+    goal: "把每張流程卡放回負責的組別：誰接到新資訊就寫入正式訂位資料，誰需要人數就讀取正式訂位資料。",
+    success: "現在脈絡完整了：正式訂位資料是唯一來源；各組在自己的業務流程裡讀取或寫入它。",
+    failureHint: "先看這件事是誰負責做：電話改人數屬於電話組，現場報到屬於櫃台組，準備份量屬於廚房組。",
     zones: [
-      { id: "update", name: "更新訂位資料", hint: "把新資訊寫回 SSOT" },
-      { id: "read", name: "讀取訂位資料", hint: "從 SSOT 取得資訊" }
+      { id: "frontDeskTeam", name: "櫃台組", hint: "接待、現場協調" },
+      { id: "phoneTeam", name: "電話組", hint: "接聽來電" },
+      { id: "kitchenTeam", name: "廚房組", hint: "準備餐點" },
+      { id: "reservationData", name: "正式訂位資料", hint: "唯一人數來源" }
     ],
-    items: [
-      { id: "bossCall", label: "老闆接到電話：客人改成 8 人", detail: "新資訊進來", target: "update" },
-      { id: "arrivalCount", label: "服務生確認：現場來 7 人", detail: "新資訊進來", target: "update" },
-      { id: "seatingPlan", label: "座位安排：看訂位資料排桌位", detail: "使用資訊做事", target: "read" },
-      { id: "kitchenPrep", label: "廚房備料：看訂位資料準備份量", detail: "使用資訊做事", target: "read" }
+    newItems: [
+      { id: "phoneWriteReservationData", label: "電話改人數時，寫入正式訂位資料", detail: "電話組的流程", target: "phoneTeam" },
+      { id: "frontDeskWriteReservationData", label: "現場報到時，寫入正式訂位資料", detail: "櫃台組的流程", target: "frontDeskTeam" },
+      { id: "kitchenReadReservationData", label: "準備餐點時，讀取正式訂位資料", detail: "廚房組的流程", target: "kitchenTeam" }
     ]
   },
   {

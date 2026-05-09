@@ -54,6 +54,7 @@ export default function GamePanel({
   const showSource = !level.hideSource;
   const sinkId = level.sink?.id;
   const sinkItems = sinkId ? items.filter((item) => placements[item.id] === sinkId) : [];
+  const sinkTotal = sinkId ? items.filter((item) => item.target === sinkId).length : 0;
   const hasSink = Boolean(level.sink);
 
   function renderZone(zone) {
@@ -126,7 +127,7 @@ export default function GamePanel({
         <div className="sink-column">
           <div className="panel-heading">
             <h3>{level.sink.title}</h3>
-            <span className="counter">{sinkItems.length} / {items.length}</span>
+            <span className="counter">{sinkItems.length} / {sinkTotal}</span>
           </div>
           <div
             className="sink-items"

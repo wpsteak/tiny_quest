@@ -555,6 +555,10 @@ body:not(.mode-explain) .stage-footer {
   grid-template-columns: 1fr;
 }
 
+.game-panel.has-sink {
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr) minmax(240px, 320px);
+}
+
 .game-panel.no-source.has-sink {
   grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
 }
@@ -803,6 +807,11 @@ button:disabled {
   }
 
   .game-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .game-panel.has-sink,
+  .game-panel.no-source.has-sink {
     grid-template-columns: 1fr;
   }
 }
