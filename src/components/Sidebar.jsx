@@ -12,14 +12,15 @@ export default function Sidebar({
 }) {
   return (
     <aside className="lesson-nav" aria-label="關卡導覽">
-      <div className="brand">
-        <span className="brand-mark" aria-hidden="true">M</span>
-        <div>
-          <h1>模組化小屋</h1>
-          <p>從空間整理學程式設計</p>
+      <div className="lesson-nav-scroll">
+        <div className="brand">
+          <span className="brand-mark" aria-hidden="true">M</span>
+          <div>
+            <h1>模組化小屋</h1>
+            <p>從空間整理學程式設計</p>
+          </div>
         </div>
-      </div>
-      <ol className="level-list">
+        <ol className="level-list">
         {chapters.map((chapter, ci) => {
           const { start, end } = getChapterRange(ci);
           const isExpanded = expandedChapters.includes(ci);
@@ -63,8 +64,9 @@ export default function Sidebar({
             </li>
           );
         })}
-      </ol>
-      <div className="nav-actions">
+        </ol>
+      </div>
+      <div className="lesson-nav-foot">
         <button type="button" className="text-button" onClick={onResetAll}>整個重來</button>
       </div>
     </aside>
