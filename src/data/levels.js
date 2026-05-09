@@ -374,29 +374,6 @@ export const levels = [
   },
   {
     type: "互動關卡",
-    title: "老師需要班級點名工具，第一版做到哪裡就夠？",
-    mode: "sort",
-    sourceTitle: "點名工具功能",
-    zoneTitle: "現在要不要做",
-    context: "老師的需求只是<strong>每天記錄班上誰到了、誰沒到</strong>。",
-    goal: "把現在真的需要的功能，和等需求變明確後再做的功能分開。",
-    success: "這就是 KISS：先做學生名單、日期、到或未到。QR code、家長通知、統計報表都可能有用，但不是第一版一定要有。",
-    failureHint: "先盯住第一版需求：每天記錄誰到了。會讓第一版變很大、但還不是必要的功能，先不要加。",
-    zones: [
-      { id: "now", name: "現在需要", hint: "第一版就要能用" },
-      { id: "later", name: "先不要", hint: "需求明確後再加" }
-    ],
-    items: [
-      { id: "studentList", label: "學生名單", detail: "誰在班上", target: "now" },
-      { id: "attendanceDate", label: "點名日期", detail: "哪一天", target: "now" },
-      { id: "presentAbsent", label: "到 / 未到", detail: "基本狀態", target: "now" },
-      { id: "qrCode", label: "QR code 自動簽到", detail: "可以以後再說", target: "later" },
-      { id: "parentNotify", label: "自動通知家長", detail: "還不是第一版必要", target: "later" },
-      { id: "analytics", label: "出席統計儀表板", detail: "先不要過度設計", target: "later" }
-    ]
-  },
-  {
-    type: "互動關卡",
     title: "只是要做簡單登入，AI 卻丟出一整套大架構",
     mode: "sort",
     sourceTitle: "AI 提出的登入設計",
@@ -428,6 +405,27 @@ export const levels = [
       <p>例如餐廳只是要把雞腿飯從 120 元改成 130 元，好的做法是改價目表那一格；壞的做法是重做整份菜單、換收銀流程、順手改海報版型。</p>
       <p>AI coding 很常過度熱心。你要學會要求 AI：「只改必要位置，不要重構無關檔案，不要改既有行為。」</p>
     `
+  },
+  {
+    type: "互動關卡",
+    title: "老師只要記錄『誰到了』，AI 卻順手加了 QR code 和家長通知",
+    mode: "sort",
+    sourceTitle: "點名工具功能",
+    zoneTitle: "在不在這次需求裡",
+    context: "老師的需求是<strong>每天記錄班上誰到了、誰沒到</strong>。",
+    goal: "把這次需求真的要做的，和需求沒提到的功能分開。",
+    success: "最小改動的精神：老師只要『誰到了』，就只做這個。QR code、家長通知、統計報表雖然可能有用，但都超出這次需求。",
+    failureHint: "回到老師說的需求：每天記錄誰到了。需求沒提到的功能，這次先不要做進來。",
+    zones: [
+      { id: "now", name: "現在需要", hint: "第一版就要能用" },
+      { id: "later", name: "先不要", hint: "需求明確後再加" }
+    ],
+    items: [
+      { id: "presentAbsent", label: "當天到 / 未到", detail: "基本狀態", target: "now" },
+      { id: "qrCode", label: "QR code 自動簽到", detail: "可以以後再說", target: "later" },
+      { id: "parentNotify", label: "自動通知家長", detail: "還不是第一版必要", target: "later" },
+      { id: "analytics", label: "出席統計儀表板", detail: "先不要過度設計", target: "later" }
+    ]
   },
   {
     type: "互動關卡",
