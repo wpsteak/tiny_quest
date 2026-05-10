@@ -16,8 +16,9 @@ Check these files when the level order changes:
 Some sort levels do not start from a source pile. Use `initialPlacements` to
 place cards directly into zones at the start, and `hideSource: true` when the
 task should be about reorganizing an existing structure instead of sorting loose
-cards. Use `sink` when the level needs a right-side collection area at the same
-layout level as the source pile, rather than another module zone.
+cards. Use `sink` when the level needs a dedicated collection area for cards
+that should be removed from module zones. The sink is displayed below the module
+zones so adding or removing it does not shift the source and module columns.
 
 `cumulativeFrom` means a sort level starts from a previous sort level's state.
 If the referenced index is wrong, later levels can inherit the wrong items or
@@ -32,6 +33,7 @@ Current chained levels:
 - Level index `8` depends on `7`.
 - Level index `9` depends on `8`.
 - Level index `14` depends on `13`.
+- Level index `17` depends on `16`.
 
 Stored progress is also index-based. If existing users have localStorage from an
 older course order, their saved `currentLevel`, `chapterProgress`,

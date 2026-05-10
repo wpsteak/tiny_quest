@@ -317,26 +317,60 @@ export const levels = [
   },
   {
     type: "互動關卡",
-    title: "AI 在三個頁面各複製了一份 Email 驗證規則",
+    title: "AI 讓每個頁面都自己寫了一份 Email 檢查，該收去哪？",
     mode: "sort",
-    sourceTitle: "Email 檢查功能",
-    zoneTitle: "DRY 整理",
-    context: "App 有<strong>註冊、登入、個人資料三個地方都要檢查 Email</strong>，規則一樣。",
-    goal: "把共用規則集中，讓各頁面使用同一個檢查工具。",
-    success: "這就是 DRY：Email 格式規則只寫一次。註冊、登入、個人資料頁都使用同一個工具，而不是各自複製一份。",
-    failureHint: "如果 Email 規則改了，你希望只改一個共用工具，還是改三個頁面裡各自複製的規則？",
+    sourceTitle: "要建立的共用規則",
+    zoneTitle: "App 頁面分工",
+    sink: {
+      id: "duplicateEmailChecks",
+      title: "待整併",
+      name: "散落的 Email 檢查副本",
+      hint: "不該留在各頁"
+    },
+    context: "App 有<strong>註冊、登入、個人資料三個地方都要檢查 Email</strong>。AI 為了讓每頁先跑起來，讓每個頁面各自寫了一份檢查規則。",
+    goal: "建立共用 Email 檢查，並把各頁面自己複製的檢查規則移到待整併區。",
+    success: "你建立了共用規則，也抓出了散落的重複副本。下一步才是讓各頁面在自己的流程裡呼叫它。",
+    failureHint: "共用 Email 檢查應該放進 App 分工裡；各頁自己寫的 Email 檢查副本應該移到待整併區。",
     zones: [
-      { id: "common", name: "共用檢查工具", hint: "規則只寫一次" },
-      { id: "useCommon", name: "使用共用工具", hint: "頁面呼叫它" },
-      { id: "copyRule", name: "不要複製", hint: "重複規則會失控" }
+      { id: "signupPage", name: "註冊頁", hint: "建立帳號" },
+      { id: "loginPage", name: "登入頁", hint: "驗證身分" },
+      { id: "profilePage", name: "個人資料頁", hint: "更新資料" },
+      { id: "sharedEmailCheck", name: "共用 Email 檢查", hint: "規則只寫一次" }
     ],
     items: [
-      { id: "emailRule", label: "檢查 Email 格式", detail: "validateEmail()", target: "common" },
-      { id: "signupUse", label: "註冊頁使用 Email 檢查", detail: "call validateEmail()", target: "useCommon" },
-      { id: "loginUse", label: "登入頁使用 Email 檢查", detail: "call validateEmail()", target: "useCommon" },
-      { id: "profileUse", label: "個人資料頁使用 Email 檢查", detail: "call validateEmail()", target: "useCommon" },
-      { id: "signupCopy", label: "註冊頁複製一份 Email 規則", detail: "copy pasted rule", target: "copyRule" },
-      { id: "profileCopy", label: "個人資料頁再複製一份 Email 規則", detail: "copy pasted rule", target: "copyRule" }
+      { id: "sharedEmailCheckCard", label: "共用 Email 檢查", detail: "所有頁面都呼叫這一份", target: "sharedEmailCheck", carryForward: true },
+      { id: "signupEmailCheckCopy", label: "註冊頁 Email 檢查", detail: "註冊頁自己複製的一份規則", target: "duplicateEmailChecks" },
+      { id: "loginEmailCheckCopy", label: "登入頁 Email 檢查", detail: "登入頁自己複製的一份規則", target: "duplicateEmailChecks" },
+      { id: "profileEmailCheckCopy", label: "個人資料頁 Email 檢查", detail: "個人資料頁自己複製的一份規則", target: "duplicateEmailChecks" }
+    ],
+    initialPlacements: {
+      signupEmailCheckCopy: "signupPage",
+      loginEmailCheckCopy: "loginPage",
+      profileEmailCheckCopy: "profilePage"
+    }
+  },
+  {
+    type: "互動關卡",
+    title: "有了共用 Email 檢查後，各頁面該怎麼使用？",
+    mode: "sort",
+    cumulativeFrom: 16,
+    carryForward: "persistent",
+    sourceTitle: "頁面流程",
+    zoneTitle: "App 頁面分工",
+    context: "上一關你已經建立了<strong>共用 Email 檢查</strong>，也把各頁自己複製的檢查規則移到待整併區。現在各頁做自己的工作時，應該在流程裡呼叫共用檢查。",
+    goal: "把每張流程卡放回負責的頁面：需要檢查 Email 時，呼叫共用 Email 檢查。",
+    success: "現在 Email 規則只維護一次；各頁面在自己的流程裡呼叫同一份共用檢查。",
+    failureHint: "先看這件事是哪個頁面負責做：註冊送出屬於註冊頁，登入送出屬於登入頁，更新資料屬於個人資料頁。",
+    zones: [
+      { id: "signupPage", name: "註冊頁", hint: "建立帳號" },
+      { id: "loginPage", name: "登入頁", hint: "驗證身分" },
+      { id: "profilePage", name: "個人資料頁", hint: "更新資料" },
+      { id: "sharedEmailCheck", name: "共用 Email 檢查", hint: "規則只寫一次" }
+    ],
+    newItems: [
+      { id: "signupUseSharedEmailCheck", label: "註冊送出時，呼叫共用 Email 檢查", detail: "註冊頁的流程", target: "signupPage" },
+      { id: "loginUseSharedEmailCheck", label: "登入送出時，呼叫共用 Email 檢查", detail: "登入頁的流程", target: "loginPage" },
+      { id: "profileUseSharedEmailCheck", label: "更新資料時，呼叫共用 Email 檢查", detail: "個人資料頁的流程", target: "profilePage" }
     ]
   },
   {
