@@ -445,12 +445,12 @@ export const levels = [
     sourceTitle: "可能的改動",
     zoneTitle: "改動範圍",
     context: "需求只有一個：<strong>雞腿飯從 120 元改成 130 元</strong>。",
-    goal: "選出真正必要的改動；和需求無關的改動放到「不要動」。",
+    goal: "選出真正必要的改動；和需求無關的改動放到「非必要改動」。",
     success: "最小改動不是偷懶，而是降低風險。需求只改價格，就不要順手改菜單結構、海報設計或收銀流程。",
     failureHint: "先盯住需求：只改雞腿飯價格。任何和價格無關、可能造成新 bug 的改動，都應該先不要動。",
     zones: [
       { id: "needed", name: "必要改動", hint: "剛好滿足需求" },
-      { id: "avoid", name: "不要動", hint: "超出需求範圍" }
+      { id: "avoid", name: "非必要改動", hint: "超出需求範圍" }
     ],
     items: [
       { id: "price", label: "把雞腿飯價格改成 130", detail: "必要", target: "needed" },
@@ -462,17 +462,17 @@ export const levels = [
   },
   {
     type: "互動關卡",
-    title: "提醒時間要晚一小時，怎麼請 AI 不要順便重構？",
+    title: "提醒時間要晚一小時，怎樣看待 AI 提出的任務清單？",
     mode: "sort",
     sourceTitle: "AI 想改的地方",
     zoneTitle: "是否該改",
     context: "需求是<strong>把提醒時間從晚上 8 點改成晚上 9 點</strong>。",
-    goal: "把必要改動和過度改動分開，避免請 AI 順手重構無關檔案。",
+    goal: "把必要改動和非必要改動分開，避免請 AI 順手重構無關檔案。",
     success: "這就是和 AI 協作時的最小改動：只改提醒時間設定，驗證提醒仍會出現，不要順手重寫整個通知模組。",
     failureHint: "需求只有提醒時間。凡是改資料模型、重寫 UI、搬模組，通常都不是這次必要改動。",
     zones: [
       { id: "needed", name: "必要改動", hint: "只改需求要求的地方" },
-      { id: "avoid", name: "不要動", hint: "會增加風險" }
+      { id: "avoid", name: "非必要改動", hint: "會增加風險" }
     ],
     items: [
       { id: "timeSetting", label: "把提醒時間設定改成 21:00", detail: "reminderTime", target: "needed" },
