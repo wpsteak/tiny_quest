@@ -317,29 +317,6 @@ export const levels = [
   },
   {
     type: "互動關卡",
-    title: "折扣規則改了，不想再一個一個店員去通知",
-    mode: "sort",
-    sourceTitle: "折扣規則",
-    zoneTitle: "整理方式",
-    context: "店裡有會員折扣、生日折扣和滿額免運。<strong>不要讓每位店員各自背一套</strong>，否則規則一改就會有人還用舊版。",
-    goal: "把共用規則和使用規則的人分開。",
-    success: "DRY 的重點是：折扣規則只維護一次。店員可以使用這套規則，但不要每個人各自抄一份。",
-    failureHint: "想想如果生日折扣改了，哪種做法只要改一張規則表？哪種做法要提醒每位店員改自己的版本？",
-    zones: [
-      { id: "shared", name: "共用規則表", hint: "規則只維護一次" },
-      { id: "use", name: "使用規則", hint: "照共用規則表執行" },
-      { id: "duplicate", name: "各自抄一份", hint: "容易漏改" }
-    ],
-    items: [
-      { id: "discountRules", label: "折扣規則表", detail: "會員、生日、滿額規則", target: "shared" },
-      { id: "cashierUse", label: "櫃台結帳使用規則表", detail: "照表判斷折扣", target: "use" },
-      { id: "onlineUse", label: "線上訂單使用規則表", detail: "照表判斷折扣", target: "use" },
-      { id: "amyCopy", label: "Amy 店員自己抄一份規則", detail: "可能忘記更新", target: "duplicate" },
-      { id: "benCopy", label: "Ben 店員也抄一份規則", detail: "可能跟 Amy 不同", target: "duplicate" }
-    ]
-  },
-  {
-    type: "互動關卡",
     title: "AI 在三個頁面各複製了一份 Email 驗證規則",
     mode: "sort",
     sourceTitle: "Email 檢查功能",
