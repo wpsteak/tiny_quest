@@ -28,7 +28,7 @@ export const levels = [
         <li>小需求被做成大架構</li>
       </ul>
       <p>這堂課要練的：<strong>看懂亂在哪，以及怎麼指揮 AI 整理回來</strong>。</p>
-      <p class="muted">會帶到的五個原則:&nbsp;SRP / SSOT / DRY / KISS / 最小改動</p>
+      <p class="muted">會帶到的四個原則:&nbsp;SRP / SSOT / DRY / 最小改動原則</p>
     `
   },
   {
@@ -374,40 +374,6 @@ export const levels = [
   },
   {
     type: "說明",
-    title: "下一個維護的人能不能五分鐘內看懂你的設計？",
-    mode: "explain",
-    html: `
-      <p><strong>KISS</strong> 是 Keep It Simple，意思是「先讓設計簡單」。</p>
-      <p>AI 看過很多大型專案，所以有時會把小工具做得像大系統。你只是要簡單登入，它可能生出 service、manager、factory、strategy、repository 一大堆。</p>
-      <p>好設計不是看起來很厲害，而是下一個人能快速理解、能安全修改。先做剛好能使用、能理解的版本，需求真的變複雜時再重構。</p>
-    `
-  },
-  {
-    type: "互動關卡",
-    title: "只是要做簡單登入，AI 卻丟出一整套大架構",
-    mode: "sort",
-    sourceTitle: "AI 提出的登入設計",
-    zoneTitle: "KISS 判斷",
-    context: "你只是要<strong>一個簡單登入畫面</strong>，AI 卻丟出 service / factory / strategy 一整套架構。",
-    goal: "把第一版需要的東西和過度設計分開。",
-    success: "簡單登入第一版需要欄位、按鈕和錯誤訊息。複雜權限、策略管理器和 plugin 系統可能是大型產品才需要的東西。",
-    failureHint: "想想學生或下一位維護者能不能快速看懂。看起來很專業但目前用不到的架構，會讓小工具變難改。",
-    zones: [
-      { id: "simple", name: "第一版需要", hint: "剛好完成需求" },
-      { id: "tooMuch", name: "過度設計", hint: "現在先不要" }
-    ],
-    items: [
-      { id: "emailInput", label: "Email 欄位", detail: "使用者輸入帳號", target: "simple" },
-      { id: "passwordInput", label: "密碼欄位", detail: "使用者輸入密碼", target: "simple" },
-      { id: "loginButton", label: "登入按鈕", detail: "送出登入", target: "simple" },
-      { id: "errorText", label: "錯誤訊息", detail: "登入失敗時顯示", target: "simple" },
-      { id: "authFactory", label: "AuthServiceFactory", detail: "現在太複雜", target: "tooMuch" },
-      { id: "strategyManager", label: "LoginStrategyManager", detail: "目前用不到", target: "tooMuch" },
-      { id: "pluginSystem", label: "登入 plugin 系統", detail: "過度架構", target: "tooMuch" }
-    ]
-  },
-  {
-    type: "說明",
     title: "需求只動一格，要怎麼擋住順手大改的衝動？",
     mode: "explain",
     html: `
@@ -479,6 +445,71 @@ export const levels = [
       { id: "rewriteNotification", label: "重寫整個提醒通知模組", detail: "過度", target: "avoid" },
       { id: "changemealLog", label: "修改飲食紀錄資料格式", detail: "無關", target: "avoid" },
       { id: "redesignDashboard", label: "重新設計首頁畫面", detail: "無關", target: "avoid" }
+    ]
+  },
+  {
+    type: "說明",
+    title: "先識別問題，再指揮 AI 修正",
+    mode: "explain",
+    html: `
+      <p>AI Coding 不是只叫 AI 寫完。你要先看出它哪裡失控，再請 AI 把判斷攤開來。</p>
+      <ul>
+        <li><strong>SRP</strong> 幫你注意模組責任是不是混亂。</li>
+        <li><strong>SSOT</strong> 幫你注意資料來源是不是分散。</li>
+        <li><strong>DRY</strong> 幫你注意規則是不是重複散落。</li>
+        <li><strong>最小改動原則</strong> 幫你注意需求或改動範圍是不是變大。</li>
+      </ul>
+      <p class="lede"><strong>最後要練的是兩步：先識別問題，再請 AI 說清楚怎麼處理。</strong></p>
+    `
+  },
+  {
+    type: "互動關卡",
+    title: "先識別：AI 的產出是哪種失控？",
+    mode: "sort",
+    sourceTitle: "AI Coding 狀況",
+    zoneTitle: "失控現象",
+    context: "你正在檢查 AI 做出來的結果。先不要急著修，先判斷它是哪一種失控現象。",
+    goal: "把每張狀況卡放到對應的失控現象。",
+    success: "你能先辨識問題：模組責任混亂、資料來源分散、規則重複散落、需求被放大，或改動範圍外溢。",
+    failureHint: "先看現象本身：是模組亂了、資料散了、規則重複了、需求變大了，還是改到無關範圍？",
+    zones: [
+      { id: "moduleConfusion", name: "模組責任混亂", hint: "SRP" },
+      { id: "dataScattered", name: "資料來源分散", hint: "SSOT" },
+      { id: "ruleRepeated", name: "規則重複散落", hint: "DRY" },
+      { id: "needExpanded", name: "需求被放大", hint: "最小改動原則" },
+      { id: "changeOverflow", name: "改動範圍外溢", hint: "最小改動原則" }
+    ],
+    items: [
+      { id: "mealReminderInLog", label: "提醒功能被塞進飲食紀錄模組", detail: "飲食紀錄開始負責不屬於自己的事", target: "moduleConfusion" },
+      { id: "reservationHeadCountCopies", label: "訂位人數在好幾個組別各自記一份", detail: "同一份資料出現多個版本", target: "dataScattered" },
+      { id: "emailValidationCopies", label: "註冊、登入、個人資料各自做 Email 檢查", detail: "同一條規則重複出現", target: "ruleRepeated" },
+      { id: "attendanceExtraFeatures", label: "老師只要點名，AI 加了 QR code 和家長通知", detail: "功能超出這次需求", target: "needExpanded" },
+      { id: "reminderTimeBroadRewrite", label: "只要改提醒時間，AI 連首頁和通知模組都重做", detail: "改動範圍超出需求", target: "changeOverflow" }
+    ]
+  },
+  {
+    type: "互動關卡",
+    title: "再追問：要請 AI 攤開哪些資訊？",
+    mode: "sort",
+    sourceTitle: "給 AI 的追問",
+    zoneTitle: "追問方向",
+    context: "識別問題後，不一定要自己立刻判斷答案。先用追問讓 AI 說明、盤點、比較，再決定怎麼修。",
+    goal: "把每張追問卡放到對應的追問方向。",
+    success: "你能把問題轉成可執行的追問：請 AI 說明模組理由、盤點資料來源、檢查重複規則、區分需求，或列出改動範圍。",
+    failureHint: "看追問要 AI 攤開什麼資訊：模組理由、資料來源、重複規則、原始需求，或實際改動範圍。",
+    zones: [
+      { id: "explainModule", name: "說明模組理由", hint: "SRP" },
+      { id: "listDataSources", name: "盤點資料來源", hint: "SSOT" },
+      { id: "checkRepeatedRules", name: "檢查重複規則", hint: "DRY" },
+      { id: "separateRequirement", name: "區分原始需求", hint: "最小改動原則" },
+      { id: "listChangedScope", name: "列出改動範圍", hint: "最小改動原則" }
+    ],
+    items: [
+      { id: "askWhyModule", label: "這個功能為什麼放在這個模組？有沒有更合理的既有模組？", detail: "請 AI 比較模組責任", target: "explainModule" },
+      { id: "askDataLocations", label: "這份資料目前在哪些地方被保存或讀取？哪一份才是唯一可信來源？", detail: "請 AI 盤點資料來源", target: "listDataSources" },
+      { id: "askRepeatedRule", label: "這條規則有沒有在多個頁面重複出現？能不能整理成共用規則？", detail: "請 AI 檢查重複規則", target: "checkRepeatedRules" },
+      { id: "askOriginalNeed", label: "哪些功能是原始需求要求的，哪些是你自行延伸的？", detail: "請 AI 區分需求範圍", target: "separateRequirement" },
+      { id: "askChangedScope", label: "你實際改了哪些頁面或模組？每一項和需求有什麼關係？", detail: "請 AI 列出改動範圍", target: "listChangedScope" }
     ]
   }
 ];

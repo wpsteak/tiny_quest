@@ -5,8 +5,8 @@ export const chapters = [
   { name: "1. SRP 單一職責", startIndex: 2 },
   { name: "2. SSOT 唯一真相", startIndex: 11 },
   { name: "3. DRY 不要重複", startIndex: 15 },
-  { name: "4. KISS 保持簡單", startIndex: 18 },
-  { name: "5. 最小改動", startIndex: 20 }
+  { name: "4. 最小改動", startIndex: 18 },
+  { name: "5. AI Coding 原則複習", startIndex: 22 }
 ];
 
 export function getChapterRange(chapterIndex) {
