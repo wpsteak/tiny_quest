@@ -391,34 +391,13 @@ export const levels = [
   },
   {
     type: "說明",
-    title: "需求只動一格，要怎麼擋住順手大改的衝動？",
+    title: "練習克制自己與AI，一次只改一件事情",
     mode: "explain",
     html: `
       <p><strong>最小改動原則</strong> 是：需求只要改一小件事，就不要順手重寫一大片。</p>
       <p>例如餐廳只是要把雞腿飯從 120 元改成 130 元，好的做法是改價目表那一格；壞的做法是重做整份菜單、換收銀流程、順手改海報版型。</p>
-      <p>AI coding 很常過度熱心。你要學會要求 AI：「只改必要位置，不要重構無關檔案，不要改既有行為。」</p>
+      <p>和 AI coding 時，要學會要求 AI：「只改必要需求，不要改非必要的東西。」</p>
     `
-  },
-  {
-    type: "互動關卡",
-    title: "老師只要記錄『誰到了』，AI 卻順手加了 QR code 和家長通知",
-    mode: "sort",
-    sourceTitle: "點名工具功能",
-    zoneTitle: "在不在這次需求裡",
-    context: "老師的需求是<strong>每天記錄班上誰到了、誰沒到</strong>。",
-    goal: "把這次需求真的要做的，和需求沒提到的功能分開。",
-    success: "最小改動的精神：老師只要『誰到了』，就只做這個。QR code、家長通知、統計報表雖然可能有用，但都超出這次需求。",
-    failureHint: "回到老師說的需求：每天記錄誰到了。需求沒提到的功能，這次先不要做進來。",
-    zones: [
-      { id: "now", name: "現在需要", hint: "第一版就要能用" },
-      { id: "later", name: "先不要", hint: "需求明確後再加" }
-    ],
-    items: [
-      { id: "presentAbsent", label: "當天到 / 未到", detail: "基本狀態", target: "now" },
-      { id: "qrCode", label: "QR code 自動簽到", detail: "可以以後再說", target: "later" },
-      { id: "parentNotify", label: "自動通知家長", detail: "還不是第一版必要", target: "later" },
-      { id: "analytics", label: "出席統計儀表板", detail: "先不要過度設計", target: "later" }
-    ]
   },
   {
     type: "互動關卡",
@@ -462,6 +441,27 @@ export const levels = [
       { id: "rewriteNotification", label: "重寫整個提醒通知模組", detail: "過度", target: "avoid" },
       { id: "changemealLog", label: "修改飲食紀錄資料格式", detail: "無關", target: "avoid" },
       { id: "redesignDashboard", label: "重新設計首頁畫面", detail: "無關", target: "avoid" }
+    ]
+  },
+  {
+    type: "互動關卡",
+    title: "AI擅自把前面有討論但還沒要做的功能也寫進去了",
+    mode: "sort",
+    sourceTitle: "點名工具功能",
+    zoneTitle: "在不在這次需求裡",
+    context: "老師的需求是<strong>每天記錄班上誰到了、誰沒到</strong>。",
+    goal: "把這次需求真的要做的，和需求沒提到的功能分開。",
+    success: "最小改動的精神：老師只要『誰到了』，就只做這個。QR code、家長通知、統計報表雖然可能有用，但都超出這次需求。",
+    failureHint: "回到老師說的需求：每天記錄誰到了。需求沒提到的功能，這次先不要做進來。",
+    zones: [
+      { id: "now", name: "現在需要", hint: "第一版就要能用" },
+      { id: "later", name: "先不要", hint: "需求明確後再加" }
+    ],
+    items: [
+      { id: "presentAbsent", label: "當天到 / 未到", detail: "基本狀態", target: "now" },
+      { id: "qrCode", label: "QR code 自動簽到", detail: "可以以後再說", target: "later" },
+      { id: "parentNotify", label: "自動通知家長", detail: "還不是第一版必要", target: "later" },
+      { id: "analytics", label: "出席統計儀表板", detail: "先不要過度設計", target: "later" }
     ]
   },
   {
