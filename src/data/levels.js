@@ -380,6 +380,17 @@ export const levels = [
   },
   {
     type: "說明",
+    title: "為什麼 AI 會把同一條規則複製到不同地方？",
+    mode: "explain",
+    html: `
+      <p>AI coding 常常會先讓眼前頁面跑起來。</p>
+      <p>你叫它改註冊頁，它就先在註冊頁寫一份；你叫它改登入頁，它可能又在登入頁寫一份。</p>
+      <p>短期看起來都能用，但規則一改，就很容易漏掉某個地方。</p>
+      <p class="lede"><strong>所以看到同一條規則重複出現時，記得提醒 AI 幫你整併成共用規則。</strong></p>
+    `
+  },
+  {
+    type: "說明",
     title: "需求只動一格，要怎麼擋住順手大改的衝動？",
     mode: "explain",
     html: `
