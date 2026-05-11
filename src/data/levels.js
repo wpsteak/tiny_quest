@@ -517,14 +517,19 @@ export const levels = [
     title: "課程完成：你已經能開始看懂 AI Coding 的失控方向",
     mode: "explain",
     html: `
-      <p>這堂課不是要你背術語，而是讓你在和 AI 協作時，能看出系統哪裡正在失控。</p>
+      <p>請把這些概念當成檢查點，運用在未來每一個 AI Coding 任務上：</p>
       <ul>
-        <li><strong>SRP</strong>：功能是不是放在合適的模組。</li>
-        <li><strong>SSOT</strong>：資料是不是只有一個可信來源。</li>
-        <li><strong>DRY</strong>：同一條規則是不是重複散落。</li>
-        <li><strong>最小改動原則</strong>：AI 有沒有把需求或改動範圍放大。</li>
+        <li><strong>SRP</strong>：留意功能是否放在合適的模組。</li>
+        <li><strong>SSOT</strong>：檢查資料是否從單一來源取得。</li>
+        <li><strong>DRY</strong>：觀察同一類規則是不是重複出現在專案各處。</li>
+        <li><strong>最小改動原則</strong>：留意 AI 有沒有擅自把需求或改動範圍放大。</li>
       </ul>
-      <p class="lede"><strong>接下來的重點：不要只接受 AI 的結果，要會要求 AI 說明、盤點、比較，再決定怎麼修。</strong></p>
+      <p class="lede"><strong>你在指揮 AI，還是被 AI 牽著鼻子走？</strong></p>
+      <p class="lede">下一次和 AI 對話時：</p>
+      <ul>
+        <li>別只丟需求給 AI 就收工，也別無條件接受 AI 的結果。</li>
+        <li>多請 AI 說明、盤點、比較，再決定怎麼修。</li>
+      </ul>
     `
   }
 ];
