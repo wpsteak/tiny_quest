@@ -5,15 +5,14 @@ export const levels = [
     mode: "explain",
     html: `
       <p>AI 很會產生程式碼。</p>
-      <p class="lede">但 AI <strong>缺乏大局觀</strong>。它只看眼前的任務，不看整個系統。</p>
+      <p class="lede">但現階段 AI <strong>缺乏大局觀</strong>。它只看眼前的任務，不看整個系統。</p>
       <p>所以 AI 不會主動替你維持:</p>
       <ul>
         <li>系統邊界</li>
-        <li>資料一致性</li>
+        <li>資料、邏輯一致性</li>
         <li>長期可維護性</li>
       </ul>
-      <p class="lede"><strong>人負責架構判斷，AI 負責加速實作。</strong></p>
-      <p class="muted">這堂課的目標：練架構判斷的眼光，而不是背 SRP / SSOT / DRY 這些名詞。</p>
+      <p class="lede"><strong>人負責定規則、定邊界、做取捨、避免 AI 產出失控；<br/>AI 負責加速實作</strong></p>
     `
   },
   {
