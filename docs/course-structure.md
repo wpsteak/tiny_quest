@@ -33,7 +33,7 @@ Current chained levels:
 - Level index `8` depends on `7`.
 - Level index `9` depends on `8`.
 - Level index `14` depends on `13`.
-- Level index `17` depends on `16`.
+- Level index `18` depends on `17`.
 
 Stored progress is also index-based. If existing users have localStorage from an
 older course order, their saved `currentLevel`, `chapterProgress`,

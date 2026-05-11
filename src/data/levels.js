@@ -222,16 +222,10 @@ export const levels = [
     mode: "explain",
     html: `
       <p><strong>SSOT</strong> 是 Single Source of Truth，意思是「同一件事只認一個真相來源」。</p>
-
-      <p>AI coding 常常是「局部解題」：</p>
-      <ul class="tight">
-        <li>你叫它改客廳，它就只看客廳；你叫它改廚房，它就只看廚房。</li>
-        <li>當不同地方都需要同一份資料時，AI 可能會各放一份，讓每個地方先跑起來。</li>
-      </ul>
-
       <p>長期來看，會越來越難維護</p>
       <p class="tight lede"><strong>你以為 AI 改好了，結果只是眼前那頁改了；<br/>換個頁面一用，舊邏輯全部冒出來。</strong></p>
       <p class="tight">SSOT 是讓同一份資訊、狀態或核心規則只有一個可信來源，避免各處各自維護而產生不一致。</p>
+      <p class="lede">接下來，我們用小餐廳的例子當練習。</p>
     `
   },
   {
@@ -305,6 +299,19 @@ export const levels = [
   },
   {
     type: "說明",
+    title: "為什麼 AI 會讓資料散在不同地方？",
+    mode: "explain",
+    html: `
+      <p>AI coding 常常是「局部解題」：</p>
+      <ul class="tight">
+        <li>你叫它改客廳，它就只看客廳；你叫它改廚房，它就只看廚房。</li>
+        <li>當不同地方都需要同一份資料時，AI 可能會各放一份，讓每個地方先跑起來。</li>
+      </ul>
+      <p class="lede"><strong>所以看到同一份資料散在不同地方時，記得提醒AI幫你整併</strong></p>
+    `
+  },
+  {
+    type: "說明",
     title: "同一條規則複製三份，改的時候會漏掉哪份？",
     mode: "explain",
     html: `
@@ -351,7 +358,7 @@ export const levels = [
     type: "互動關卡",
     title: "有了共用 Email 檢查後，各頁面該怎麼使用？",
     mode: "sort",
-    cumulativeFrom: 16,
+    cumulativeFrom: 17,
     carryForward: "persistent",
     sourceTitle: "頁面流程",
     zoneTitle: "App 頁面分工",
